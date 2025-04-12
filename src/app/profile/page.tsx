@@ -2,8 +2,10 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button"
+import { useRouter } from 'next/navigation';
 
 const ProfilePage = () => {
+  const router = useRouter();
   // Placeholder data for orders
   const orders = [
     { id: 1, date: '2024-07-15', items: 2, total: 65.98, paymentStatus: 'Paid', shippingStatus: 'Shipped' },
@@ -19,8 +21,7 @@ const ProfilePage = () => {
   };
 
     const handleReturn = (orderId: number) => {
-        alert(`Return initiated for order ${orderId}.  This is a placeholder function.`);
-        // Implement actual return logic here
+        router.push(`/return/${orderId}`);
     };
 
   return (

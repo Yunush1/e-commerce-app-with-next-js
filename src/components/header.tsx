@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { CartContext } from '@/context/CartContext';
 import Link from 'next/link';
+import { Heart } from 'lucide-react';
 
 const Header = () => {
   const router = useRouter();
@@ -100,6 +101,13 @@ const Header = () => {
             {cartItems.length > 0 && (
               <span className="cart-count-badge">{cartItems.length}</span>
             )}
+          </Link>
+        </div>
+
+        {/* Wishlist Icon */}
+        <div className="relative">
+          <Link href="/wishlist">
+            <Heart className="h-6 w-6 cursor-pointer text-white" />
           </Link>
         </div>
 

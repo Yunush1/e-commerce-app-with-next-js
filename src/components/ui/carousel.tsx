@@ -7,7 +7,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "vaul-carousel"
+} from "vaul-carousel/components/carousel"
 
 import { cn } from "@/lib/utils"
 

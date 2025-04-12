@@ -45,7 +45,7 @@ export default function Home() {
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>Error: {error}</div>;
   }
 
   return (
@@ -82,4 +82,3 @@ export default function Home() {
     </div>
   )
 }
-

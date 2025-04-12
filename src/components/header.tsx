@@ -33,7 +33,7 @@ const Header = () => {
     <header className="bg-secondary p-4 flex items-center justify-between shadow-md">
       <div className="flex items-center space-x-4">
         <Button variant="ghost" onClick={() => router.push('/')}>
-          ShopWave
+          Akanoor
         </Button>
         <Button variant="ghost" onClick={() => router.push('/categories')}>
           Categories

@@ -38,6 +38,9 @@ const Header = () => {
         <Button variant="ghost" onClick={() => router.push('/categories')}>
           Categories
         </Button>
+         <Button variant="ghost" onClick={() => router.push('/buy-now')}>
+          Buy Now
+        </Button>
       </div>
 
       <div className="flex items-center space-x-2">

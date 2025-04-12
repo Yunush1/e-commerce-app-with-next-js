@@ -14,9 +14,17 @@ const CartPage = () => {
   };
 
   const handleBuyNow = () => {
-    // Navigate to the buy now page
-    router.push('/buy-now');
+    if (cartItems.length > 0) {
+      // For simplicity, we'll pass the details of the first item in the cart.
+      // In a real application, you might want to handle multiple items.
+      const product = cartItems[0];
+      const productString = JSON.stringify(product);
+      router.push(`/buy-now?product=${encodeURIComponent(productString)}`);
+    } else {
+      alert("Your cart is empty. Please add items to your cart before proceeding to buy now.");
+    }
   };
+
 
   if (cartItems.length === 0) {
     return (

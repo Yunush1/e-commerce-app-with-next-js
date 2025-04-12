@@ -20,7 +20,7 @@ export default function Home() {
     const fetchNewArrivals = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BASE_URL}?limit=4`);
+        const response = await fetch(`${API_BASE_URL}?limit=10`);
         if (!response.ok) {
           throw new Error('Failed to fetch new arrivals');
         }

@@ -3,6 +3,7 @@
 import React from 'react';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Button} from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
 
 // Dummy product data
 const newArrivals = [
@@ -19,7 +20,7 @@ const newArrivals = [
     description: 'A warm and comfortable blanket for cold nights.',
     imageUrl: 'https://picsum.photos/id/238/200/300',
     price: 29.99,
-  },
+   },
   {
     id: 3,
     name: 'Minimalist Watch',
@@ -37,6 +38,11 @@ const newArrivals = [
 ];
 
 export default function Home() {
+  const router = useRouter();
+
+  const viewProduct = (id:number) => {
+    router.push(`/product/${id}`);
+  };
   return (
     <div className="container mx-auto py-8">
       <section className="mb-8">
@@ -55,12 +61,12 @@ export default function Home() {
                   className="mb-4 rounded-md"
                 />
                 <p className="text-lg font-semibold">${product.price.toFixed(2)}</p>
-                <Button className="mt-4">View Details</Button>
+                <Button className="mt-4" onClick={() => viewProduct(product.id)}>View Details</Button>
               </CardContent>
             </Card>
           ))}
         </div>
       </section>
     </div>
-  );
+  )
 }

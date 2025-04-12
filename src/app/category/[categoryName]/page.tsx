@@ -3,6 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import { getProductsByCategory } from '@/services/product-service';
+import {Button} from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+
 
 interface Props {
   params: { categoryName: string };
@@ -13,12 +16,16 @@ const CategoryPage = ({ params }: Props) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+    const router = useRouter();
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        const data = await getProductsByCategory(categoryName);
+        const response = await fetch(`/api/products?category=${categoryName}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch products for category ${categoryName}`);
+        }
+        const data = await response.json();
         setProducts(data);
       } catch (err: any) {
         setError(err);
@@ -38,6 +45,10 @@ const CategoryPage = ({ params }: Props) => {
     return <div>Error: {error.message}</div>;
   }
 
+    const viewProduct = (id:number) => {
+        router.push(`/product/${id}`);
+    };
+
   return (
     <div className="container mx-auto py-8">
       <h2 className="text-2xl font-bold mb-4">{categoryName}</h2>
@@ -55,6 +66,7 @@ const CategoryPage = ({ params }: Props) => {
                 className="mb-4 rounded-md"
               />
               <p className="text-lg font-semibold">${product.price.toFixed(2)}</p>
+                <Button className="mt-4" onClick={() => viewProduct(product.id)}>View Details</Button>
             </CardContent>
           </Card>
         ))}
@@ -64,4 +76,3 @@ const CategoryPage = ({ params }: Props) => {
 };
 
 export default CategoryPage;
-

@@ -6,7 +6,7 @@ import {Button} from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { Product } from '@/types/product';
 
-const API_BASE_URL = 'https://fakestoreapi.com';
+const API_BASE_URL = '/api/products';
 
 export default function Home() {
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function Home() {
     const fetchNewArrivals = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/products?limit=4`); // Fetching only 4 products for new arrivals
+        const response = await fetch(`${API_BASE_URL}?limit=4`);
         if (!response.ok) {
           throw new Error('Failed to fetch new arrivals');
         }

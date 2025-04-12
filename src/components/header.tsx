@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {useRouter} from 'next/navigation';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
@@ -14,10 +14,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { CartContext } from '@/context/CartContext';
+import Link from 'next/link';
 
 const Header = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const { cartItems } = useContext(CartContext);
 
   const handleSearch = () => {
     if (searchQuery.trim() !== '') {
@@ -47,6 +50,15 @@ const Header = () => {
         />
         <Button onClick={handleSearch}>Search</Button>
       </div>
+       {/* Cart Icon with Badge */}
+       <div className="relative">
+          <Link href="/cart">
+            <Icons.shoppingCart className="h-6 w-6 cursor-pointer" />
+            {cartItems.length > 0 && (
+              <span className="cart-count-badge">{cartItems.length}</span>
+            )}
+          </Link>
+        </div>
 
       <DropdownMenu>
       <DropdownMenuTrigger asChild>

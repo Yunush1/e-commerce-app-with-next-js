@@ -30,7 +30,7 @@ const Header = () => {
 
   const avatarFallbackName = "Test User"
   return (
-    <header className="bg-secondary p-4 flex items-center justify-between shadow-md">
+    <header className="bg-primary p-4 flex items-center justify-between shadow-md">
       <div className="flex items-center space-x-4">
         <Button variant="ghost" onClick={() => router.push('/')}>
           Akanoor
@@ -109,3 +109,4 @@ const Header = () => {
 };
 
 export default Header;
+

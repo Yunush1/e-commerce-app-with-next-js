@@ -70,6 +70,7 @@ export default function Home() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [budgetProducts, setBudgetProducts] = useState<Product[]>([]);
+    const [selectedBudget, setSelectedBudget] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchNewArrivals = async () => {
@@ -91,25 +92,28 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        const fetchBudgetProducts = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(`${API_BASE_URL}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch products');
-                }
-                const data = await response.json();
-                // Filter products with price less than or equal to $25
-                const filteredProducts = data.filter((product: Product) => product.price <= 25);
-                setBudgetProducts(filteredProducts);
-            } catch (err: any) {
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchBudgetProducts();
-    }, []);
+         const fetchBudgetProducts = async () => {
+             try {
+                 setLoading(true);
+                 const response = await fetch(`${API_BASE_URL}`);
+                 if (!response.ok) {
+                     throw new Error('Failed to fetch products');
+                 }
+                 const data = await response.json();
+                 // Filter products based on selected budget
+                 let filteredProducts = data;
+                 if (selectedBudget !== null) {
+                     filteredProducts = data.filter((product: Product) => product.price <= selectedBudget);
+                 }
+                 setBudgetProducts(filteredProducts);
+             } catch (err: any) {
+                 setError(err);
+             } finally {
+                 setLoading(false);
+             }
+         };
+         fetchBudgetProducts();
+     }, [selectedBudget]);
 
 
     const viewProduct = (id:number) => {
@@ -161,28 +165,37 @@ export default function Home() {
             </section>
 
              {/* Shop in Budget Section */}
-             <section className="mb-8">
-                 <h2 className="text-2xl font-bold mb-4">Shop in Budget (Under $25)</h2>
-                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                     {budgetProducts.map((product) => (
-                         <Card key={product.id}>
-                             <CardHeader>
-                                 <CardTitle>{product.name}</CardTitle>
-                                 <CardDescription>{product.description}</CardDescription>
-                             </CardHeader>
-                             <CardContent className="flex flex-col items-center">
-                                 <img
-                                     src={product.imageUrl}
-                                     alt={product.name}
-                                     className="mb-4 rounded-md h-40"
-                                 />
-                                 <p className="text-lg font-semibold">${product.price.toFixed(2)}</p>
-                                 <Button className="mt-4" onClick={() => viewProduct(product.id)}>View Details</Button>
-                             </CardContent>
-                         </Card>
-                     ))}
-                 </div>
-             </section>
+              <section className="mb-8">
+                  <h2 className="text-2xl font-bold mb-4">Shop in Budget</h2>
+                  <div className="flex space-x-4 mb-4">
+                      <Button variant="outline" onClick={() => setSelectedBudget(10)}>Under $10</Button>
+                      <Button variant="outline" onClick={() => setSelectedBudget(20)}>Under $20</Button>
+                      <Button variant="outline" onClick={() => setSelectedBudget(30)}>Under $30</Button>
+                      <Button variant="outline" onClick={() => setSelectedBudget(40)}>Under $40</Button>
+                      <Button variant="outline" onClick={() => setSelectedBudget(50)}>Under $50</Button>
+                      <Button variant="outline" onClick={() => setSelectedBudget(60)}>Under $60</Button>
+                      <Button variant="secondary" onClick={() => setSelectedBudget(null)}>Show All</Button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {budgetProducts.map((product) => (
+                          <Card key={product.id}>
+                              <CardHeader>
+                                  <CardTitle>{product.name}</CardTitle>
+                                  <CardDescription>{product.description}</CardDescription>
+                              </CardHeader>
+                              <CardContent className="flex flex-col items-center">
+                                  <img
+                                      src={product.imageUrl}
+                                      alt={product.name}
+                                      className="mb-4 rounded-md h-40"
+                                  />
+                                  <p className="text-lg font-semibold">${product.price.toFixed(2)}</p>
+                                  <Button className="mt-4" onClick={() => viewProduct(product.id)}>View Details</Button>
+                              </CardContent>
+                          </Card>
+                      ))}
+                  </div>
+              </section>
 
 
             <section className="mb-8">
@@ -210,4 +223,3 @@ export default function Home() {
         </div>
     )
 }
-

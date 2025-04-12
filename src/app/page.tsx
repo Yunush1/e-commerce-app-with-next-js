@@ -150,7 +150,7 @@ export default function Home() {
                                 <img
                                     src={product.imageUrl}
                                     alt={product.name}
-                                    className="mb-4 rounded-md"
+                                    className="mb-4 rounded-md h-40"
                                 />
                                 <p className="text-lg font-semibold">${product.price.toFixed(2)}</p>
                                 <Button className="mt-4" onClick={() => viewProduct(product.id)}>View Details</Button>

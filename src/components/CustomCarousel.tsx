@@ -22,23 +22,32 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % itemsCount);
+     resetTimer();
   };
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + itemsCount) % itemsCount);
+     resetTimer();
   };
 
   useEffect(() => {
-    if (autoSlide) {
-      timerRef.current = setInterval(nextSlide, autoSlideInterval);
-    }
-
+    resetTimer();
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
       }
     };
   }, [autoSlide, autoSlideInterval, itemsCount]);
+
+    // Function to reset the autoSlide timer
+    const resetTimer = () => {
+        if (timerRef.current) {
+            clearInterval(timerRef.current);
+        }
+        if (autoSlide) {
+            timerRef.current = setInterval(nextSlide, autoSlideInterval);
+        }
+    };
 
   return (
     <div className="relative w-full overflow-hidden rounded-md shadow-md">
@@ -72,7 +81,7 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({
               "h-2 w-2 rounded-full transition-colors duration-200",
               currentIndex === index ? "bg-primary" : "bg-gray-300 hover:bg-gray-400"
             )}
-            onClick={() => setCurrentIndex(index)}
+            onClick={() => { setCurrentIndex(index); resetTimer(); }}
             aria-label={`Go to slide ${index + 1}`}
           />
         ))}

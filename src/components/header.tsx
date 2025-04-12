@@ -18,12 +18,14 @@ import { CartContext } from '@/context/CartContext';
 import Link from 'next/link';
 import { Heart } from 'lucide-react';
 import { WishlistContext } from '@/context/WishlistContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Header = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const { cartItems } = useContext(CartContext);
   const { wishlistItems } = useContext(WishlistContext);
+    const isMobile = useIsMobile();
 
   const handleSearch = () => {
     if (searchQuery.trim() !== '') {
@@ -35,55 +37,120 @@ const Header = () => {
   return (
     <header className="bg-[#A04E95] p-4 flex items-center justify-between shadow-md">
       <div className="flex items-center space-x-4 text-white">
-        <Button variant="ghost" onClick={() => router.push('/')}>
-          ShopWave
-        </Button>
-          <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="text-white">
-                      Categories
+          {isMobile ? (
+              <Sheet>
+                  <SheetTrigger asChild>
+                      <Button variant="ghost" size="icon" className="text-white">
+                          <Icons.menu className="h-5 w-5" />
+                      </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left" className="w-64">
+                      <div className="py-4">
+                          <Button variant="ghost" onClick={() => router.push('/')} className="w-full justify-start">
+                              ShopWave
+                          </Button>
+                          <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                  <Button variant="ghost" className="text-white w-full justify-start">
+                                      Categories
+                                  </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent className="w-56" align="start" forceMount>
+                                  <DropdownMenuItem onClick={() => router.push('/categories')}>
+                                      All Categories
+                                  </DropdownMenuItem>
+                                  <DropdownMenuSeparator />
+                                  <DropdownMenuItem onClick={() => router.push('/category/Lipsticks')}>
+                                      Lipsticks
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => router.push('/category/Face Masks')}>
+                                      Face Masks
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => router.push('/category/Eyeliners')}>
+                                      Eyeliners
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => router.push('/category/Nail Polishes')}>
+                                      Nail Polishes
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => router.push('/category/Blushes')}>
+                                      Blushes
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => router.push('/category/Foundations')}>
+                                      Foundations
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => router.push('/category/Concealers')}>
+                                      Concealers
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => router.push('/category/Bronzers')}>
+                                      Bronzers
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => router.push('/category/Highlighters')}>
+                                      Highlighters
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem onClick={() => router.push('/category/Setting Sprays')}>
+                                      Setting Sprays
+                                  </DropdownMenuItem>
+                              </DropdownMenuContent>
+                          </DropdownMenu>
+                          <Button variant="ghost" onClick={() => router.push('/buy-now')} className="w-full justify-start">
+                              Buy Now
+                          </Button>
+                      </div>
+                  </SheetContent>
+              </Sheet>
+          ) : (
+              <>
+                  <Button variant="ghost" onClick={() => router.push('/')}>
+                      ShopWave
                   </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="start" forceMount>
-                  <DropdownMenuItem onClick={() => router.push('/categories')}>
-                      All Categories
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => router.push('/category/Lipsticks')}>
-                      Lipsticks
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/category/Face Masks')}>
-                      Face Masks
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/category/Eyeliners')}>
-                      Eyeliners
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/category/Nail Polishes')}>
-                      Nail Polishes
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/category/Blushes')}>
-                      Blushes
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/category/Foundations')}>
-                      Foundations
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/category/Concealers')}>
-                      Concealers
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/category/Bronzers')}>
-                      Bronzers
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/category/Highlighters')}>
-                      Highlighters
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => router.push('/category/Setting Sprays')}>
-                      Setting Sprays
-                  </DropdownMenuItem>
-              </DropdownMenuContent>
-          </DropdownMenu>
-         <Button variant="ghost" onClick={() => router.push('/buy-now')}>
-          Buy Now
-        </Button>
+                  <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="text-white">
+                              Categories
+                          </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56" align="start" forceMount>
+                          <DropdownMenuItem onClick={() => router.push('/categories')}>
+                              All Categories
+                          </DropdownMenuItem>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem onClick={() => router.push('/category/Lipsticks')}>
+                              Lipsticks
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => router.push('/category/Face Masks')}>
+                              Face Masks
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => router.push('/category/Eyeliners')}>
+                              Eyeliners
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => router.push('/category/Nail Polishes')}>
+                              Nail Polishes
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => router.push('/category/Blushes')}>
+                              Blushes
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => router.push('/category/Foundations')}>
+                              Foundations
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => router.push('/category/Concealers')}>
+                              Concealers
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => router.push('/category/Bronzers')}>
+                              Bronzers
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => router.push('/category/Highlighters')}>
+                              Highlighters
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => router.push('/category/Setting Sprays')}>
+                              Setting Sprays
+                          </DropdownMenuItem>
+                      </DropdownMenuContent>
+                  </DropdownMenu>
+                  <Button variant="ghost" onClick={() => router.push('/buy-now')}>
+                      Buy Now
+                  </Button>
+              </>
+          )}
       </div>
 
       <div className="flex items-center space-x-2">

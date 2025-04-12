@@ -6,13 +6,6 @@ import {Button} from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { Product } from '@/types/product';
 import Link from 'next/link';
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-} from "@/components/ui/carousel"
 import {cn} from "@/lib/utils";
 
 const API_BASE_URL = '/api/products';
@@ -85,7 +78,7 @@ export default function Home() {
                     throw new Error('Failed to fetch new arrivals');
                 }
                 const data = await response.json();
-                setNewArrivals(data);
+                 setNewArrivals(data);
             } catch (err: any) {
                 setError(err);
             } finally {
@@ -111,34 +104,7 @@ export default function Home() {
     return (
         <div className="container mx-auto py-8">
             {/* Hero Section with Carousel */}
-            <section className="mb-8">
-                <Carousel
-                    className="w-full max-w-5xl mx-auto"
-                    opts={{
-                        align: 'start',
-                    }}
-                >
-                    <CarouselContent className="w-full pb-4">
-                        {[
-                            "https://picsum.photos/id/237/800/400",
-                            "https://picsum.photos/id/238/800/400",
-                            "https://picsum.photos/id/239/800/400",
-                        ].map((image, index) => (
-                            <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                                <div className="p-1">
-                                    <img
-                                        src={image}
-                                        alt={`Carousel Image ${index + 1}`}
-                                        className="aspect-square object-cover rounded-md"
-                                    />
-                                </div>
-                            </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                    <CarouselPrevious className="left-2" />
-                    <CarouselNext className="right-2" />
-                </Carousel>
-            </section>
+            
 
             {/* Categories Section */}
             <section className="mb-8">

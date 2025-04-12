@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { Product } from '@/types/product';
 import Link from 'next/link';
 import {cn} from "@/lib/utils";
+import CustomCarousel from '@/components/CustomCarousel';
 
 const API_BASE_URL = '/api/products';
 
@@ -85,7 +86,6 @@ export default function Home() {
                 setLoading(false);
             }
         };
-
         fetchNewArrivals();
     }, []);
 
@@ -103,10 +103,20 @@ export default function Home() {
 
     return (
         <div className="container mx-auto py-8">
-            {/* Hero Section with Carousel */}
-            
+            <section className="mb-8">
+                <CustomCarousel autoSlide autoSlideInterval={5000}>
+                    <div className="h-64 flex items-center justify-center bg-muted rounded-md">
+                        <h2 className="text-2xl font-bold">Slide 1: Big Offers on Lipsticks</h2>
+                    </div>
+                    <div className="h-64 flex items-center justify-center bg-muted rounded-md">
+                        <h2 className="text-2xl font-bold">Slide 2: Discounts on Face Masks</h2>
+                    </div>
+                    <div className="h-64 flex items-center justify-center bg-muted rounded-md">
+                        <h2 className="text-2xl font-bold">Slide 3: New Arrivals in Eyeliners</h2>
+                    </div>
+                </CustomCarousel>
+            </section>
 
-            {/* Categories Section */}
             <section className="mb-8">
                 <h2 className="text-2xl font-bold mb-4">Categories</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">

@@ -5,6 +5,14 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/compo
 import {Button} from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import { Product } from '@/types/product';
+import { Carousel } from '@/components/ui/carousel';
+import {
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
+import { cn } from "@/lib/utils";
 
 const API_BASE_URL = '/api/products';
 
@@ -48,6 +56,23 @@ export default function Home() {
 
   return (
     <div className="container mx-auto py-8">
+       <section className="mb-8">
+          <h2 className="text-2xl font-bold mb-4">Offers</h2>
+          <Carousel>
+            <CarouselContent className="-ml-1 pl-1">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                  <div className="p-1 border rounded-md">
+                    <img src={`https://picsum.photos/id/${200 + index}/500/300`} alt={`Offer ${index + 1}`} className="w-full aspect-video rounded-md" />
+                    <p className="text-sm mt-2">Special offer {index + 1} description.</p>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-2" />
+            <CarouselNext className="right-2" />
+          </Carousel>
+        </section>
       <section className="mb-8">
         <h2 className="text-2xl font-bold mb-4">New Arrivals</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

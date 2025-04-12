@@ -113,7 +113,7 @@ const Header = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push('/profile')}>
           <Icons.user className="mr-2 h-4 w-4" />
           <span>Profile</span>
         </DropdownMenuItem>

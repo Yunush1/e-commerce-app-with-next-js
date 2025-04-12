@@ -7,7 +7,7 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from "vaul-carousel"
+} from "vaul-carousel/components/carousel"
 
 import { cn } from "@/lib/utils"
 
@@ -26,4 +26,3 @@ const Carousel = React.forwardRef<
 Carousel.displayName = CarouselPrimitive.displayName
 
 export { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious }
-

@@ -171,7 +171,7 @@ export async function GET(request: Request) {
     let filteredProducts = [...products];
 
     if (category) {
-        filteredProducts = products.filter(product => product.category.toLowerCase() === category.toLowerCase());
+        filteredProducts = products.filter(product => product.category && product.category.toLowerCase() === category.toLowerCase());
     }
 
     if (limit) {

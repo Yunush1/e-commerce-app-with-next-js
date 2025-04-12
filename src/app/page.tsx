@@ -15,52 +15,52 @@ const categories = [
   {
     id: 1,
     name: 'Lipsticks',
-    imageUrl: 'https://fakestoreapi.com/img/71w3oGhZMYL._AC_UY436_QL65_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/71w3oGhZMYL._AC_UF400,400_QL80_.jpg',
   },
   {
     id: 2,
     name: 'Face Masks',
-    imageUrl: 'https://fakestoreapi.com/img/71z3kpMAYsL._AC_UY226_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/71z3kpMAYsL._AC_SY450_.jpg',
   },
   {
     id: 3,
     name: 'Eyeliners',
-    imageUrl: 'https://fakestoreapi.com/img/71pWzhdypcL._AC_UL640_QL65_ML3_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/71pWzhdypcL._AC_UL640_QL65_ML3_.jpg',
   },
   {
     id: 4,
     name: 'Nail Polishes',
-    imageUrl: 'https://fakestoreapi.com/img/61sbMiUnoGL._AC_UL480_QL65_ML3_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/61sbMiUnoGL._AC_UL480_QL65_ML3_.jpg',
   },
   {
     id: 5,
     name: 'Blushes',
-    imageUrl: 'https://fakestoreapi.com/img/71YAIFU48IL._AC_UL640_QL65_ML3_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/71YAIFU48IL._AC_UL640_QL65_ML3_.jpg',
   },
   {
     id: 6,
     name: 'Foundations',
-    imageUrl: 'https://fakestoreapi.com/img/51eg5OLwL5L._AC_UL640_QL65_ML3_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/51eg5OLwL5L._AC_UL640_QL65_ML3_.jpg',
   },
   {
     id: 7,
     name: 'Concealers',
-    imageUrl: 'https://fakestoreapi.com/img/61pHnJ96oPL._AC_UL640_QL65_ML3_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/61pHnJ96oPL._AC_UL640_QL65_ML3_.jpg',
   },
   {
     id: 8,
     name: 'Bronzers',
-    imageUrl: 'https://fakestoreapi.com/img/81QpkIctqPL._AC_SX679_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/81QpkIctqPL._AC_SX679_.jpg',
   },
   {
     id: 9,
     name: 'Highlighters',
-    imageUrl: 'https://fakestoreapi.com/img/71HblAHs5xL._AC_UY879_-2.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/71HblAHs5xL._AC_UY879_-2.jpg',
   },
   {
     id: 10,
     name: 'Setting Sprays',
-    imageUrl: 'https://fakestoreapi.com/img/71z3kpMAYsL._AC_UY226_.jpg',
+    imageUrl: 'https://m.media-amazon.com/images/I/71z3kpMAYsL._AC_UY226_.jpg',
   },
 ];
 
@@ -117,8 +117,15 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
                 {categories.map(category => (
                     <Link href={`/category/${category.name}`} key={category.id}>
-                        <div className="p-4 rounded-md shadow-md bg-white hover:bg-gray-100 transition-colors duration-200">
-                            <h3 className="text-lg font-semibold text-gray-800">{category.name}</h3>
+                         <div className="relative rounded-md shadow-md overflow-hidden">
+                            <img
+                                src={category.imageUrl}
+                                alt={category.name}
+                                className="w-full h-48 object-cover rounded-t-md"
+                            />
+                            <div className="absolute bottom-0 left-0 w-full bg-white bg-opacity-75 p-2 text-center">
+                                <h3 className="text-lg font-semibold text-gray-800">{category.name}</h3>
+                            </div>
                         </div>
                     </Link>
                 ))}

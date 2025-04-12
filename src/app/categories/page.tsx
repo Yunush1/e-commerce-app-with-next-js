@@ -1,4 +1,6 @@
-) => {
+'use client';
+
+const Categories = () => {
   return (
     <div>Categories</div>
   )

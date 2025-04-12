@@ -19,7 +19,7 @@ import { Product } from '@/types/product';
 
 interface BuyNowPageProps {
   searchParams: {
-    product?: string; // Serialized JSON of the product
+    products?: string; // Serialized JSON of the product array
   };
 }
 
@@ -45,13 +45,13 @@ const BuyNowPage = ({ searchParams }: BuyNowPageProps) => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Attempt to parse the product from the URL
-  let product: Product | null = null;
-  if (searchParams.product) {
+  // Attempt to parse the products from the URL
+  let products: Product[] | null = null;
+  if (searchParams.products) {
     try {
-      product = JSON.parse(searchParams.product);
+      products = JSON.parse(searchParams.products);
     } catch (error) {
-      console.error("Error parsing product from URL:", error);
+      console.error("Error parsing products from URL:", error);
       // Handle the error appropriately, maybe redirect the user or show an error message
     }
   }
@@ -87,13 +87,15 @@ const BuyNowPage = ({ searchParams }: BuyNowPageProps) => {
   return (
     <div className="container mx-auto py-8">
         <h2 className="text-2xl font-bold mb-4">Shipping Information</h2>
-        {product ? (
-            <div className="mb-6 p-4 border rounded-md">
-                <h3 className="text-lg font-semibold">{product.name}</h3>
-                <p className="text-gray-700">{product.description}</p>
-                <p className="text-green-600 font-bold">${product.price.toFixed(2)}</p>
-                <img src={product.imageUrl} alt={product.name} className="mt-2 w-32 h-32 object-cover rounded-md" />
-            </div>
+        {products && products.length > 0 ? (
+            products.map((product) => (
+                <div key={product.id} className="mb-6 p-4 border rounded-md">
+                    <h3 className="text-lg font-semibold">{product.name}</h3>
+                    <p className="text-gray-700">{product.description}</p>
+                    <p className="text-green-600 font-bold">${product.price.toFixed(2)}</p>
+                    <img src={product.imageUrl} alt={product.name} className="mt-2 w-32 h-32 object-cover rounded-md" />
+                </div>
+            ))
         ) : (
             <p>No product details available.</p>
         )}

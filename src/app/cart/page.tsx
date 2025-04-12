@@ -1,13 +1,15 @@
 'use client';
 
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { CartContext } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { Checkbox } from "@/components/ui/checkbox"
 
 const CartPage = () => {
   const { cartItems, clearCart } = useContext(CartContext);
   const router = useRouter();
+  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
 
   const calculateTotalPrice = () => {
     return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
@@ -15,14 +17,30 @@ const CartPage = () => {
 
   const handleBuyNow = () => {
     if (cartItems.length > 0) {
-      // For simplicity, we'll pass the details of the first item in the cart.
-      // In a real application, you might want to handle multiple items.
-      const product = cartItems[0];
-      const productString = JSON.stringify(product);
-      router.push(`/buy-now?product=${encodeURIComponent(productString)}`);
+      // Filter cart items based on selected products
+      const productsToBuy = cartItems.filter(item => selectedProducts.includes(item.id));
+
+      if (productsToBuy.length === 0) {
+        alert("Please select at least one item to buy.");
+        return;
+      }
+
+      // Serialize and pass the details of selected items
+      const productString = JSON.stringify(productsToBuy);
+      router.push(`/buy-now?products=${encodeURIComponent(productString)}`);
     } else {
       alert("Your cart is empty. Please add items to your cart before proceeding to buy now.");
     }
+  };
+
+  const toggleProductSelection = (productId: number) => {
+    setSelectedProducts(prev => {
+      if (prev.includes(productId)) {
+        return prev.filter(id => id !== productId);
+      } else {
+        return [...prev, productId];
+      }
+    });
   };
 
 
@@ -43,6 +61,17 @@ const CartPage = () => {
         {cartItems.map((item) => (
           <li key={item.id} className="flex items-center justify-between py-2 border-b">
             <div className="flex items-center">
+              <Checkbox
+                id={`product-${item.id}`}
+                checked={selectedProducts.includes(item.id)}
+                onCheckedChange={() => toggleProductSelection(item.id)}
+              />
+               <label
+                   htmlFor={`product-${item.id}`}
+                   className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+               >
+                   Select
+               </label>
               <img src={item.imageUrl} alt={item.name} className="w-16 h-16 object-cover rounded mr-4" />
               <div>
                 <h3 className="font-semibold">{item.name}</h3>

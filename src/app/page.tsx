@@ -121,7 +121,7 @@ export default function Home() {
                             <img
                                 src={category.imageUrl}
                                 alt={category.name}
-                                className="w-full h-48 object-cover rounded-t-md"
+                                className="w-full h-38 object-cover rounded-t-md"
                             />
                             <div className="absolute bottom-0 left-0 w-full bg-white bg-opacity-75 p-2 text-center">
                                 <h3 className="text-lg font-semibold text-gray-800">{category.name}</h3>

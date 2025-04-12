@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { Button } from "@/components/ui/button"
 
 const ProfilePage = () => {
   // Placeholder data for orders
@@ -17,6 +18,11 @@ const ProfilePage = () => {
     address: '123 Main St, Anytown',
   };
 
+    const handleReturn = (orderId: number) => {
+        alert(`Return initiated for order ${orderId}.  This is a placeholder function.`);
+        // Implement actual return logic here
+    };
+
   return (
     <div className="container mx-auto py-8">
       <h2 className="text-2xl font-bold mb-4">User Profile</h2>
@@ -28,6 +34,16 @@ const ProfilePage = () => {
         <p><strong>Email:</strong> {user.email}</p>
         <p><strong>Address:</strong> {user.address}</p>
       </div>
+
+        {/* Return Policy */}
+        <div className="mb-6">
+            <h3 className="text-lg font-semibold mb-2">Return Policy</h3>
+            <p>
+                Our return policy allows you to return items within 30 days of purchase.
+                Please ensure the items are unused and in their original packaging.
+                Contact customer support for assistance with returns.
+            </p>
+        </div>
 
       {/* Order History */}
       <div>
@@ -43,6 +59,7 @@ const ProfilePage = () => {
                   <th className="py-2 px-4 border-b">Total</th>
                   <th className="py-2 px-4 border-b">Payment Status</th>
                   <th className="py-2 px-4 border-b">Shipping Status</th>
+                  <th className="py-2 px-4 border-b">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -54,6 +71,9 @@ const ProfilePage = () => {
                     <td className="py-2 px-4 border-b">${order.total.toFixed(2)}</td>
                     <td className="py-2 px-4 border-b">{order.paymentStatus}</td>
                     <td className="py-2 px-4 border-b">{order.shippingStatus}</td>
+                      <td className="py-2 px-4 border-b">
+                          <Button onClick={() => handleReturn(order.id)}>Return</Button>
+                      </td>
                   </tr>
                 ))}
               </tbody>
@@ -63,8 +83,8 @@ const ProfilePage = () => {
           <p>No order history available.</p>
         )}
       </div>
-    </div>
-  );
+     </div>
+   );
 };
 
 export default ProfilePage;

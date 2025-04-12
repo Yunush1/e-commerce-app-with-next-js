@@ -30,14 +30,54 @@ const Header = () => {
 
   const avatarFallbackName = "Test User"
   return (
-    <header className="bg-primary p-4 flex items-center justify-between shadow-md">
-      <div className="flex items-center space-x-4">
+    <header className="bg-[#A04E95] p-4 flex items-center justify-between shadow-md">
+      <div className="flex items-center space-x-4 text-white">
         <Button variant="ghost" onClick={() => router.push('/')}>
-          Akanoor
+          ShopWave
         </Button>
-        <Button variant="ghost" onClick={() => router.push('/categories')}>
-          Categories
-        </Button>
+          <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="text-white">
+                      Categories
+                  </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="start" forceMount>
+                  <DropdownMenuItem onClick={() => router.push('/categories')}>
+                      All Categories
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => router.push('/category/Lipsticks')}>
+                      Lipsticks
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/category/Face Masks')}>
+                      Face Masks
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/category/Eyeliners')}>
+                      Eyeliners
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/category/Nail Polishes')}>
+                      Nail Polishes
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/category/Blushes')}>
+                      Blushes
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/category/Foundations')}>
+                      Foundations
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/category/Concealers')}>
+                      Concealers
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/category/Bronzers')}>
+                      Bronzers
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/category/Highlighters')}>
+                      Highlighters
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/category/Setting Sprays')}>
+                      Setting Sprays
+                  </DropdownMenuItem>
+              </DropdownMenuContent>
+          </DropdownMenu>
          <Button variant="ghost" onClick={() => router.push('/buy-now')}>
           Buy Now
         </Button>
@@ -56,7 +96,7 @@ const Header = () => {
        {/* Cart Icon with Badge */}
        <div className="relative">
           <Link href="/cart">
-            <Icons.shoppingCart className="h-6 w-6 cursor-pointer" />
+            <Icons.shoppingCart className="h-6 w-6 cursor-pointer text-white" />
             {cartItems.length > 0 && (
               <span className="cart-count-badge">{cartItems.length}</span>
             )}
@@ -109,4 +149,3 @@ const Header = () => {
 };
 
 export default Header;
-

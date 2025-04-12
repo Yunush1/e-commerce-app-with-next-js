@@ -50,6 +50,13 @@ export default function Home() {
 
   return (
     <div className="container mx-auto py-8">
+       <section className="mb-8">
+          <div className="bg-secondary rounded-lg p-8 text-center">
+            <h1 className="text-3xl font-bold mb-4">Welcome to ShopWave</h1>
+            <p className="text-gray-700 mb-4">Discover the latest beauty products and trends.</p>
+            <Button onClick={() => router.push('/categories')}>Explore Categories</Button>
+          </div>
+        </section>
       <section className="mb-8">
         <h2 className="text-2xl font-bold mb-4">New Arrivals</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -75,4 +82,3 @@ export default function Home() {
     </div>
   )
 }
-

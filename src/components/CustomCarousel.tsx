@@ -22,16 +22,18 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % itemsCount);
-     resetTimer();
   };
 
   const prevSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex - 1 + itemsCount) % itemsCount);
-     resetTimer();
   };
 
   useEffect(() => {
-    resetTimer();
+    if (autoSlide) {
+      timerRef.current = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % itemsCount);
+      }, autoSlideInterval);
+    }
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
@@ -39,15 +41,17 @@ const CustomCarousel: React.FC<CustomCarouselProps> = ({
     };
   }, [autoSlide, autoSlideInterval, itemsCount]);
 
-    // Function to reset the autoSlide timer
-    const resetTimer = () => {
-        if (timerRef.current) {
-            clearInterval(timerRef.current);
-        }
-        if (autoSlide) {
-            timerRef.current = setInterval(nextSlide, autoSlideInterval);
-        }
-    };
+  // Function to reset the autoSlide timer
+  const resetTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    if (autoSlide) {
+      timerRef.current = setInterval(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % itemsCount);
+      }, autoSlideInterval);
+    }
+  };
 
   return (
     <div className="relative w-full overflow-hidden rounded-md shadow-md">

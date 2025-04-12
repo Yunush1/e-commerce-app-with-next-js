@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Product } from '@/types/product';
+import { Icons } from '@/components/icons';
+import { cn } from '@/lib/utils';
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,22 +18,23 @@ const Search = () => {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-      const query = searchParams.get('q') || '';
-      setSearchQuery(query);
-      if (query) {
-          fetchProducts(query);
-      }
+    const query = searchParams.get('q') || '';
+    setSearchQuery(query);
+    if (query) {
+      fetchProducts(query);
+    }
   }, [searchParams]);
 
   const fetchProducts = async (query: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`https://fakestoreapi.com/products`);
+      const response = await fetch(`/api/products`);
       if (!response.ok) {
         throw new Error('Failed to fetch products');
       }
       const data = await response.json();
+
       // Filter products based on the search query
       const filteredProducts = data.filter((product: Product) =>
         product.name.toLowerCase().includes(query.toLowerCase()) ||
@@ -56,14 +59,22 @@ const Search = () => {
   return (
     <div className="container mx-auto py-8">
       <div className="flex items-center justify-center mb-8">
-        <Input
-          type="text"
-          placeholder="Search for products..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="md:w-96"
-        />
-        <Button onClick={handleSearch} className="ml-2">Search</Button>
+        <div className="relative w-full md:w-96">
+          <Input
+            type="text"
+            placeholder="Search for products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pr-12"
+          />
+          <Button
+            onClick={handleSearch}
+            className="absolute right-1 top-1 rounded-full"
+            size="icon"
+          >
+            <Icons.search className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
 
       {loading && <p>Loading products...</p>}

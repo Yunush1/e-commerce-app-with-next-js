@@ -24,25 +24,25 @@ const Search = () => {
 
     useEffect(() => {
         const query = searchParams.get('q') || '';
-        const budgetParam = searchParams.get('budget');
+        const minPriceParam = searchParams.get('minPrice');
+        const maxPriceParam = searchParams.get('maxPrice');
 
         setSearchQuery(query);
-        setBudget(budgetParam ? parseInt(budgetParam) : null);
 
-        if (query || budgetParam) {
-            fetchProducts(query, budgetParam ? parseInt(budgetParam) : null);
-        } else {
-            // Fetch all products when no query and budget are provided
-             fetchProducts('');
-        }
+        let minPrice = minPriceParam ? parseInt(minPriceParam) : 0;
+        let maxPrice = maxPriceParam ? parseInt(maxPriceParam) : 100;
+
+        setPriceRange([minPrice, maxPrice]);
+        
+
+        fetchProducts(query, minPrice, maxPrice);
     }, [searchParams]);
 
     useEffect(() => {
-        // Apply filters whenever products or priceRange changes
         applyFilters();
     }, [priceRange, originalProducts]);
 
-    const fetchProducts = async (query: string, budget: number | null = null) => {
+    const fetchProducts = async (query: string, minPrice: number = 0, maxPrice: number = 100) => {
         setLoading(true);
         setError(null);
         try {
@@ -51,7 +51,7 @@ const Search = () => {
                 throw new Error('Failed to fetch products');
             }
             const data = await response.json();
-            setOriginalProducts(data); // Store the original product list
+            setOriginalProducts(data);
 
             let filteredProducts = data;
 
@@ -62,9 +62,7 @@ const Search = () => {
                 );
             }
 
-            if (budget !== null) {
-                filteredProducts = filteredProducts.filter(product => product.price <= budget);
-            }
+             filteredProducts = filteredProducts.filter(product => product.price >= minPrice && product.price <= maxPrice);
 
             setProducts(filteredProducts);
         } catch (err: any) {
@@ -81,7 +79,6 @@ const Search = () => {
     const applyFilters = () => {
         let filtered = [...originalProducts];
 
-        // Filter by price range
         filtered = filtered.filter(product => product.price >= priceRange[0] && product.price <= priceRange[1]);
 
         setProducts(filtered);
@@ -171,8 +168,7 @@ const Search = () => {
                         </Card>
                     ))
                 ) : (
-                    !loading && !error && searchQuery && <p>No products found matching your search.</p>
-                )}
+                    !loading && !error && searchQuery && <p>No products found matching your search.</p>}
             </div>
         </div>
     );
@@ -180,3 +176,4 @@ const Search = () => {
 
 export default Search;
  
+

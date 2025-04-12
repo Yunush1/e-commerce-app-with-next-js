@@ -118,18 +118,10 @@ export default function Home() {
      const viewProduct = (id: number) => {
          router.push(`/product/${id}`);
      };
-
-     if (loading) {
-         return <div>Loading new arrivals...</div>;
-     }
-
-     if (error) {
-         return <div>Error: {error}</div>;
-     }
-
+    
      const handleBudgetClick = (budget: number | null) => {
          if (budget) {
-             router.push(`/search?budget=${budget}`);
+             router.push(`/search?minPrice=0&maxPrice=${budget}`);
          } else {
              router.push('/search');
          }
@@ -231,3 +223,4 @@ export default function Home() {
      )
  }
  
+

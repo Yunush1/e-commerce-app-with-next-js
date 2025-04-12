@@ -1,60 +1,48 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
+import { getProductsByCategory } from '@/services/product-service';
 
 interface Props {
   params: { categoryName: string };
 }
 
-// Dummy product data
-const products = [
-  {
-    id: 1,
-    name: 'Lipstick - Ruby Red',
-    description: 'A classic red lipstick for a bold look.',
-    imageUrl: 'https://picsum.photos/id/41/200/300',
-    price: 19.99,
-    category: 'Lipsticks',
-  },
-  {
-    id: 2,
-    name: 'Hydrating Face Mask',
-    description: 'A moisturizing mask to rejuvenate your skin.',
-    imageUrl: 'https://picsum.photos/id/42/200/300',
-    price: 24.99,
-    category: 'Face Masks',
-  },
-  {
-    id: 3,
-    name: 'Eyeliner - Midnight Black',
-    description: 'A long-lasting eyeliner for a dramatic effect.',
-    imageUrl: 'https://picsum.photos/id/43/200/300',
-    price: 14.99,
-    category: 'Eyeliners',
-  },
-  {
-    id: 4,
-    name: 'Nail Polish - Rose Gold',
-    description: 'A shimmering nail polish for a touch of glamour.',
-    imageUrl: 'https://picsum.photos/id/44/200/300',
-    price: 9.99,
-    category: 'Nail Polishes',
-  },
-];
-
 const CategoryPage = ({ params }: Props) => {
   const { categoryName } = params;
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const filteredProducts = products.filter(
-    (product) => product.category === categoryName
-  );
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const data = await getProductsByCategory(categoryName);
+        setProducts(data);
+      } catch (err: any) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [categoryName]);
+
+  if (loading) {
+    return <div>Loading products...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <div className="container mx-auto py-8">
       <h2 className="text-2xl font-bold mb-4">{categoryName}</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {filteredProducts.map((product) => (
+        {products.map((product) => (
           <Card key={product.id}>
             <CardHeader>
               <CardTitle>{product.name}</CardTitle>
@@ -76,3 +64,4 @@ const CategoryPage = ({ params }: Props) => {
 };
 
 export default CategoryPage;
+

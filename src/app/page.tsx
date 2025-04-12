@@ -1,48 +1,51 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card';
 import {Button} from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { Product } from '@/types/product';
 
-// Dummy product data
-const newArrivals = [
-  {
-    id: 1,
-    name: 'Lipstick - Ruby Red',
-    description: 'A classic red lipstick for a bold look.',
-    imageUrl: 'https://picsum.photos/id/41/200/300',
-    price: 19.99,
-  },
-  {
-    id: 2,
-    name: 'Hydrating Face Mask',
-    description: 'A moisturizing mask to rejuvenate your skin.',
-    imageUrl: 'https://picsum.photos/id/42/200/300',
-    price: 24.99,
-   },
-  {
-    id: 3,
-    name: 'Eyeliner - Midnight Black',
-    description: 'A long-lasting eyeliner for a dramatic effect.',
-    imageUrl: 'https://picsum.photos/id/43/200/300',
-    price: 14.99,
-  },
-  {
-    id: 4,
-    name: 'Nail Polish - Rose Gold',
-    description: 'A shimmering nail polish for a touch of glamour.',
-    imageUrl: 'https://picsum.photos/id/44/200/300',
-    price: 9.99,
-  },
-];
+const API_BASE_URL = 'https://fakestoreapi.com';
 
 export default function Home() {
   const router = useRouter();
+  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchNewArrivals = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_BASE_URL}/products?limit=4`); // Fetching only 4 products for new arrivals
+        if (!response.ok) {
+          throw new Error('Failed to fetch new arrivals');
+        }
+        const data = await response.json();
+        setNewArrivals(data);
+      } catch (err: any) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchNewArrivals();
+  }, []);
 
   const viewProduct = (id:number) => {
     router.push(`/product/${id}`);
   };
+
+  if (loading) {
+    return <div>Loading new arrivals...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
     <div className="container mx-auto py-8">
       <section className="mb-8">

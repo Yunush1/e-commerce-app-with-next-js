@@ -1,46 +1,8 @@
 'use client';
 
-import React from 'react';
-
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  imageUrl: string;
-  price: number;
-}
-
-// Dummy product data - replace with actual data fetching
-const products: Product[] = [
-  {
-    id: 1,
-    name: 'Lipstick - Ruby Red',
-    description: 'A classic red lipstick for a bold look.',
-    imageUrl: 'https://picsum.photos/id/41/200/300',
-    price: 19.99,
-  },
-  {
-    id: 2,
-    name: 'Hydrating Face Mask',
-    description: 'A moisturizing mask to rejuvenate your skin.',
-    imageUrl: 'https://picsum.photos/id/42/200/300',
-    price: 24.99,
-  },
-  {
-    id: 3,
-    name: 'Eyeliner - Midnight Black',
-    description: 'A long-lasting eyeliner for a dramatic effect.',
-    imageUrl: 'https://picsum.photos/id/43/200/300',
-    price: 14.99,
-  },
-  {
-    id: 4,
-    name: 'Nail Polish - Rose Gold',
-    description: 'A shimmering nail polish for a touch of glamour.',
-    imageUrl: 'https://picsum.photos/id/44/200/300',
-    price: 9.99,
-  },
-];
+import React, { useState, useEffect } from 'react';
+import { getProductById } from '@/services/product-service';
+import { Product } from '@/types/product';
 
 interface Props {
   params: { id: string };
@@ -48,7 +10,33 @@ interface Props {
 
 const ProductDetails = ({ params }: Props) => {
   const { id } = params;
-  const product = products.find((p) => p.id === parseInt(id));
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        setLoading(true);
+        const data = await getProductById(parseInt(id));
+        setProduct(data);
+      } catch (err: any) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [id]);
+
+  if (loading) {
+    return <div>Loading product details...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   if (!product) {
     return <div>Product not found</div>;
@@ -74,3 +62,4 @@ const ProductDetails = ({ params }: Props) => {
 };
 
 export default ProductDetails;
+

@@ -14,9 +14,8 @@ const CartPage = () => {
   };
 
   const handleBuyNow = () => {
-    alert('Thank you for your purchase!');
-    clearCart();
-    router.push('/');
+    // Navigate to the buy now page
+    router.push('/buy-now');
   };
 
   if (cartItems.length === 0) {

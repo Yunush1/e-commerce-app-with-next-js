@@ -17,11 +17,13 @@ import {
 import { CartContext } from '@/context/CartContext';
 import Link from 'next/link';
 import { Heart } from 'lucide-react';
+import { WishlistContext } from '@/context/WishlistContext';
 
 const Header = () => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const { cartItems } = useContext(CartContext);
+  const { wishlistItems } = useContext(WishlistContext);
 
   const handleSearch = () => {
     if (searchQuery.trim() !== '') {
@@ -104,12 +106,15 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* Wishlist Icon */}
-        <div className="relative">
-          <Link href="/wishlist">
-            <Heart className="h-6 w-6 cursor-pointer text-white" />
-          </Link>
-        </div>
+         {/* Wishlist Icon */}
+         <div className="relative">
+           <Link href="/wishlist">
+             <Heart className="h-6 w-6 cursor-pointer text-white" />
+             {wishlistItems.length > 0 && (
+               <span className="cart-count-badge">{wishlistItems.length}</span>
+             )}
+           </Link>
+         </div>
 
       <DropdownMenu>
       <DropdownMenuTrigger asChild>

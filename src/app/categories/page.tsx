@@ -7,22 +7,52 @@ const categories = [
   {
     id: 1,
     name: 'Lipsticks',
-    imageUrl: 'https://picsum.photos/id/31/200/300',
+    imageUrl: 'https://fakestoreapi.com/img/71w3oGhZMYL._AC_UY436_QL65_.jpg',
   },
   {
     id: 2,
     name: 'Face Masks',
-    imageUrl: 'https://picsum.photos/id/32/200/300',
+    imageUrl: 'https://fakestoreapi.com/img/71z3kpMAYsL._AC_UY226_.jpg',
   },
   {
     id: 3,
     name: 'Eyeliners',
-    imageUrl: 'https://picsum.photos/id/33/200/300',
+    imageUrl: 'https://fakestoreapi.com/img/71pWzhdypcL._AC_UL640_QL65_ML3_.jpg',
   },
   {
     id: 4,
     name: 'Nail Polishes',
-    imageUrl: 'https://picsum.photos/id/34/200/300',
+    imageUrl: 'https://fakestoreapi.com/img/61sbMiUnoGL._AC_UL480_QL65_ML3_.jpg',
+  },
+  {
+    id: 5,
+    name: 'Blushes',
+    imageUrl: 'https://fakestoreapi.com/img/71YAIFU48IL._AC_UL640_QL65_ML3_.jpg',
+  },
+  {
+    id: 6,
+    name: 'Foundations',
+    imageUrl: 'https://fakestoreapi.com/img/51eg5OLwL5L._AC_UL640_QL65_ML3_.jpg',
+  },
+  {
+    id: 7,
+    name: 'Concealers',
+    imageUrl: 'https://fakestoreapi.com/img/61pHnJ96oPL._AC_UL640_QL65_ML3_.jpg',
+  },
+  {
+    id: 8,
+    name: 'Bronzers',
+    imageUrl: 'https://fakestoreapi.com/img/81QpkIctqPL._AC_SX679_.jpg',
+  },
+  {
+    id: 9,
+    name: 'Highlighters',
+    imageUrl: 'https://fakestoreapi.com/img/71HblAHs5xL._AC_UY879_-2.jpg',
+  },
+  {
+    id: 10,
+    name: 'Setting Sprays',
+    imageUrl: 'https://fakestoreapi.com/img/71z3kpMAYsL._AC_UY226_.jpg',
   },
 ];
 

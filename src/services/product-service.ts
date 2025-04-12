@@ -1,6 +1,5 @@
 'use server';
 
-import React from 'react';
 import { Product } from '@/types/product';
 
 const API_BASE_URL = 'https://fakestoreapi.com';
@@ -13,7 +12,14 @@ export const getProducts = async (): Promise<Product[]> => {
   }
 
   const data = await response.json();
-  return data;
+  return data.map((product: any) => ({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    description: product.description,
+    imageUrl: product.image, 
+    category: product.category,
+  }));
 };
 
 export const getProductById = async (id: number): Promise<Product> => {
@@ -24,7 +30,14 @@ export const getProductById = async (id: number): Promise<Product> => {
   }
 
   const data = await response.json();
-  return data;
+  return {
+    id: data.id,
+    name: data.name,
+    price: data.price,
+    description: data.description,
+    imageUrl: data.image,
+    category: data.category,
+  };
 };
 
 export const getProductsByCategory = async (categoryName: string): Promise<Product[]> => {
@@ -35,5 +48,12 @@ export const getProductsByCategory = async (categoryName: string): Promise<Produ
   }
 
   const data = await response.json();
-  return data;
+  return data.map((product: any) => ({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    description: product.description,
+    imageUrl: product.image,
+    category: product.category,
+  }));
 };

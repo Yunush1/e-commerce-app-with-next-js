@@ -40,4 +40,3 @@ const Icons = {
 };
 
 export {Icons};
-

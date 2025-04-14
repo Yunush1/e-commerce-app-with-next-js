@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import {useRouter} from 'next/navigation';
 import {Input} from '@/components/ui/input';
 import {Button} from '@/components/ui/button';
@@ -19,6 +19,10 @@ import Link from 'next/link';
 import { Heart } from 'lucide-react';
 import { WishlistContext } from '@/context/WishlistContext';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '@/lib/firebase';
+import {signOut} from "firebase/auth";
+import {useToast} from "@/hooks/use-toast";
 
 const Header = () => {
   const router = useRouter();
@@ -26,10 +30,40 @@ const Header = () => {
   const { cartItems } = useContext(CartContext);
   const { wishlistItems } = useContext(WishlistContext);
     const isMobile = useIsMobile();
+    const [user, loading, error] = useAuthState(auth);
+    const { toast } = useToast()
 
   const handleSearch = () => {
     if (searchQuery.trim() !== '') {
       router.push(`/search?q=${searchQuery}`);
+    }
+  };
+
+    useEffect(() => {
+        if (error) {
+            toast({
+                variant: "destructive",
+                title: "Auth Error",
+                description: error.message
+            })
+        }
+    }, [error, toast]);
+
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      toast({
+          title: "Signed out",
+          description: "You have been signed out successfully",
+      })
+      router.push('/');
+    } catch (error: any) {
+        toast({
+            variant: "destructive",
+            title: "Sign out error",
+            description: error.message
+        })
     }
   };
 
@@ -187,16 +221,41 @@ const Header = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="https://picsum.photos/id/11/50/50" alt="Avatar" />
+            {user ? (
+                <AvatarImage src={user.photoURL || "https://picsum.photos/id/11/50/50"} alt={user.displayName || "Avatar"} />
+            ) : null}
             <AvatarFallback>{avatarFallbackName[0]}{avatarFallbackName[1]}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuItem onClick={() => router.push('/profile')}>
-          <Icons.user className="mr-2 h-4 w-4" />
-          <span>Profile</span>
-        </DropdownMenuItem>
+          {loading ? (
+              <DropdownMenuItem>Loading...</DropdownMenuItem>
+          ) : user ? (
+              <>
+                  <DropdownMenuItem onClick={() => router.push('/profile')}>
+                      <Icons.user className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut}>
+                      <Icons.logout className="mr-2 h-4 w-4"/>
+                      <span>Sign Out</span>
+                  </DropdownMenuItem>
+              </>
+          ) : (
+              <>
+                  <DropdownMenuItem onClick={() => router.push('/signin')}>
+                      <Icons.user className="mr-2 h-4 w-4" />
+                      <span>Sign In</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push('/signup')}>
+                      <Icons.add className="mr-2 h-4 w-4" />
+                      <span>Sign Up</span>
+                  </DropdownMenuItem>
+              </>
+          )}
+
         <DropdownMenuSeparator />
         <DropdownMenuItem>
           <Icons.settings className="mr-2 h-4 w-4" />

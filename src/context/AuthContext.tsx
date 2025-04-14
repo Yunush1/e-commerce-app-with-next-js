@@ -40,23 +40,31 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const auth = getAuth(app);
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setAuthUser(user);
-            } else {
-                setAuthUser(null);
-            }
-            setLoading(false);
-        });
+        const initializeAuth = async () => {
+            if (typeof window !== 'undefined') {
+                const authInstance = getAuth(app);
+                const unsubscribe = onAuthStateChanged(authInstance, (user) => {
+                    if (user) {
+                        setAuthUser(user);
+                    } else {
+                        setAuthUser(null);
+                    }
+                    setLoading(false);
+                });
 
-        return () => unsubscribe(); // Cleanup on unmount
+                return () => unsubscribe(); // Cleanup on unmount
+            }
+            setLoading(false); // Ensure loading is false even if not initialized
+        };
+
+        const unsubscribe = initializeAuth();
+        return () => unsubscribe && unsubscribe();
     }, []);
 
     const signUp = async (email: string, password: string) => {
-        const auth = getAuth(app);
+        const authInstance = getAuth(app);
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
+            await createUserWithEmailAndPassword(authInstance, email, password);
         } catch (error: any) {
             console.error("Signup failed:", error.message);
             throw new Error(error.message);
@@ -64,9 +72,9 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     };
 
     const signIn = async (email: string, password: string) => {
-        const auth = getAuth(app);
+         const authInstance = getAuth(app);
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            await signInWithEmailAndPassword(authInstance, email, password);
         } catch (error: any) {
             console.error("Signin failed:", error.message);
             throw new Error(error.message);
@@ -74,9 +82,9 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     };
 
     const signOutFunc = async () => {
-        const auth = getAuth(app);
+        const authInstance = getAuth(app);
         try {
-            await signOut(auth);
+            await signOut(authInstance);
         } catch (error: any) {
             console.error("Signout failed:", error.message);
             throw new Error(error.message);

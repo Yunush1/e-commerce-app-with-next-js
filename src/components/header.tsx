@@ -31,6 +31,7 @@ const Header = () => {
     const isMobile = useIsMobile();
     const { authUser, loading, signOut: authSignOut } = useAuth();
     const { toast } = useToast()
+    const [authError, setAuthError] = useState<Error | null>(null);
 
   const handleSearch = () => {
     if (searchQuery.trim() !== '') {
@@ -49,14 +50,14 @@ const Header = () => {
     }, [authUser, loading, router]);
 
     useEffect(() => {
-        if (error) {
+        if (authError) {
             toast({
                 variant: "destructive",
                 title: "Auth Error",
-                description: error.message
+                description: authError.message
             })
         }
-    }, [error, toast]);
+    }, [authError, toast]);
 
 
   const handleSignOut = async () => {
@@ -68,6 +69,7 @@ const Header = () => {
       })
       router.push('/');
     } catch (error: any) {
+        setAuthError(error);
         toast({
             variant: "destructive",
             title: "Sign out error",

@@ -9,7 +9,7 @@ import {
     onAuthStateChanged,
     User,
 } from 'firebase/auth';
-import { app } from '@/firebase';
+import { firebaseApp, auth } from '@/lib/firebase';
 
 interface AuthContextProps {
     authUser: User | null;
@@ -42,8 +42,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     useEffect(() => {
         const initializeAuth = async () => {
             if (typeof window !== 'undefined') {
-                const authInstance = getAuth(app);
-                const unsubscribe = onAuthStateChanged(authInstance, (user) => {
+                const unsubscribe = onAuthStateChanged(auth, (user) => {
                     if (user) {
                         setAuthUser(user);
                     } else {
@@ -62,9 +61,8 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     }, []);
 
     const signUp = async (email: string, password: string) => {
-        const authInstance = getAuth(app);
         try {
-            await createUserWithEmailAndPassword(authInstance, email, password);
+            await createUserWithEmailAndPassword(auth, email, password);
         } catch (error: any) {
             console.error("Signup failed:", error.message);
             throw new Error(error.message);
@@ -72,9 +70,8 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     };
 
     const signIn = async (email: string, password: string) => {
-         const authInstance = getAuth(app);
         try {
-            await signInWithEmailAndPassword(authInstance, email, password);
+            await signInWithEmailAndPassword(auth, email, password);
         } catch (error: any) {
             console.error("Signin failed:", error.message);
             throw new Error(error.message);
@@ -82,9 +79,8 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
     };
 
     const signOutFunc = async () => {
-        const authInstance = getAuth(app);
         try {
-            await signOut(authInstance);
+            await signOut(auth);
         } catch (error: any) {
             console.error("Signout failed:", error.message);
             throw new Error(error.message);
@@ -101,3 +97,4 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
+

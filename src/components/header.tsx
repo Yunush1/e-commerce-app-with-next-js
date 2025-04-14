@@ -22,6 +22,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { signOut} from "firebase/auth";
 import {useToast} from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+
 
 const Header = () => {
   const router = useRouter();
@@ -29,7 +31,7 @@ const Header = () => {
   const { cartItems } = useContext(CartContext);
   const { wishlistItems } = useContext(WishlistContext);
     const isMobile = useIsMobile();
-    const { authUser, loading, signOut: authSignOut } = useAuth();
+    const { authUser, loading, signOut: authSignOut,googleSignIn } = useAuth();
     const { toast } = useToast()
     const [authError, setAuthError] = useState<Error | null>(null);
 
@@ -58,6 +60,24 @@ const Header = () => {
             })
         }
     }, [authError, toast]);
+
+  const handleGoogleSignIn = async () => {
+        try {
+            await googleSignIn();
+            toast({
+                title: "Google Sign-in successful!",
+                description: "You have successfully signed in with Google.",
+            });
+            router.push('/profile');
+        } catch (error: any) {
+            setAuthError(error);
+            toast({
+                variant: "destructive",
+                title: "Google Sign-in error",
+                description: error.message
+            });
+        }
+    };
 
 
   const handleSignOut = async () => {
@@ -249,6 +269,11 @@ const Header = () => {
                       <span>Profile</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
+                   <DropdownMenuItem onClick={handleGoogleSignIn}>
+                         <Icons.google className="mr-2 h-4 w-4" />
+                         <span>Sign In with Google</span>
+                     </DropdownMenuItem>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleSignOut}>
                       <Icons.logout className="mr-2 h-4 w-4"/>
                       <span>Sign Out</span>
@@ -299,3 +324,4 @@ const Header = () => {
 };
 
 export default Header;
+

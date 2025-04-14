@@ -17,6 +17,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/context/AuthContext";
 import Link from 'next/link';
+import { Icons } from "@/components/icons";
 
 const formSchema = z.object({
     email: z.string().email({
@@ -29,7 +30,7 @@ const formSchema = z.object({
 
 const SignUpPage = () => {
     const router = useRouter();
-    const { signUp } = useAuth();
+    const { signUp, googleSignIn } = useAuth();
     const [signUpError, setSignUpError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,6 +41,19 @@ const SignUpPage = () => {
             password: "",
         },
     });
+
+      const handleGoogleSignIn = async () => {
+         setIsSubmitting(true);
+         setSignUpError(null);
+         try {
+             await googleSignIn();
+             router.push('/profile');
+         } catch (error: any) {
+             setSignUpError(error.message || 'Google Sign-up failed');
+         } finally {
+             setIsSubmitting(false);
+         }
+     };
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
@@ -96,13 +110,22 @@ const SignUpPage = () => {
                     </Button>
                 </form>
             </Form>
-            <div className="mt-4">
-                <p>
-                    Already have an account? <Link href="/signin" className="text-blue-500">Sign In</Link>
-                </p>
-            </div>
+             <div className="mt-4">
+                 <Button variant="outline" disabled={isSubmitting} onClick={handleGoogleSignIn}>
+                        {isSubmitting ? "Signing Up..." : (
+                            <>
+                                <Icons.google className="mr-2 h-4 w-4" />
+                                Sign Up with Google
+                            </>
+                        )}
+                    </Button>
+                    <p>
+                        Already have an account? <Link href="/signin" className="text-blue-500">Sign In</Link>
+                    </p>
+                </div>
         </div>
     );
 };
 
 export default SignUpPage;
+

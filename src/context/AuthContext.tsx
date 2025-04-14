@@ -8,6 +8,10 @@ import {
     signOut,
     onAuthStateChanged,
     User,
+    GoogleAuthProvider,
+    signInWithPopup,
+    RecaptchaVerifier,
+    signInWithPhoneNumber
 } from 'firebase/auth';
 import { firebaseApp, auth } from '@/lib/firebase';
 
@@ -17,6 +21,8 @@ interface AuthContextProps {
     signUp: (email: string, password: string) => Promise<void>;
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
+    googleSignIn: () => Promise<void>;
+    phoneSignIn: (phoneNumber: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextProps>({
@@ -25,6 +31,8 @@ const AuthContext = createContext<AuthContextProps>({
     signUp: async () => {},
     signIn: async () => {},
     signOut: async () => {},
+    googleSignIn: async () => {},
+    phoneSignIn: async () => {},
 });
 
 export function useAuth(): AuthContextProps {
@@ -87,12 +95,54 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
         }
     };
 
+    const googleSignIn = async () => {
+        const provider = new GoogleAuthProvider();
+        try {
+            await signInWithPopup(auth, provider);
+        } catch (error: any) {
+            console.error("Google sign-in failed", error);
+            throw new Error(error.message);
+        }
+    };
+
+   const phoneSignIn = async (phoneNumber: string) => {
+        try {
+            // Ensure RecaptchaVerifier is properly set up
+            window.recaptchaVerifier = new RecaptchaVerifier('sign-in-button', {
+                'size': 'invisible',
+                'callback': (response: any) => {
+                    // reCAPTCHA solved, allow signInWithPhoneNumber.
+                }
+            }, auth);
+
+            const appVerifier = window.recaptchaVerifier;
+
+            await signInWithPhoneNumber(auth, phoneNumber, appVerifier)
+                .then((confirmationResult) => {
+                    // Save the confirmation result to use it later
+                    window.confirmationResult = confirmationResult;
+                    // Auto-verify the SMS code (for testing purposes only)
+                    if (confirmationResult.verificationId) {
+                        console.log("SMS sent successfully");
+                    }
+                }).catch((error) => {
+                    console.error("Error sending SMS:", error);
+                });
+        } catch (error: any) {
+            console.error("Phone sign-in error", error);
+            throw new Error(error.message);
+        }
+    };
+
+
     const value = {
         authUser,
         loading,
         signUp,
         signIn,
         signOut: signOutFunc,
+        googleSignIn,
+        phoneSignIn,
     };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

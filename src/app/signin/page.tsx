@@ -17,6 +17,8 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/context/AuthContext";
 import Link from 'next/link';
+import { Icons } from "@/components/icons";
+
 
 const formSchema = z.object({
     email: z.string().email({
@@ -29,7 +31,7 @@ const formSchema = z.object({
 
 const SignInPage = () => {
     const router = useRouter();
-    const { signIn } = useAuth();
+    const { signIn, googleSignIn } = useAuth();
     const [signInError, setSignInError] = useState<string | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -40,6 +42,19 @@ const SignInPage = () => {
             password: "",
         },
     });
+
+  const handleGoogleSignIn = async () => {
+        setIsSubmitting(true);
+        setSignInError(null);
+        try {
+            await googleSignIn();
+            router.push('/profile');
+        } catch (error: any) {
+            setSignInError(error.message || 'Google Sign-in failed');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
         setIsSubmitting(true);
@@ -97,6 +112,14 @@ const SignInPage = () => {
                 </form>
             </Form>
             <div className="mt-4">
+                 <Button variant="outline" disabled={isSubmitting} onClick={handleGoogleSignIn}>
+                        {isSubmitting ? "Signing In..." : (
+                            <>
+                                <Icons.google className="mr-2 h-4 w-4" />
+                                Sign In with Google
+                            </>
+                        )}
+                    </Button>
                 <p>
                     Don't have an account? <Link href="/signup" className="text-blue-500">Sign Up</Link>
                 </p>
@@ -106,3 +129,4 @@ const SignInPage = () => {
 };
 
 export default SignInPage;
+

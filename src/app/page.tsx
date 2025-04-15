@@ -129,7 +129,7 @@ export default function Home() {
 
 
      return (
-         <div className="container mx-auto py-8">
+         <div className="container mx-auto px-8">
              <section className="mb-8">
                 <CustomCarousel autoSlide autoSlideInterval={5000}>
                     <div className="h-64 flex items-center justify-center bg-muted rounded-md">
@@ -153,7 +153,7 @@ export default function Home() {
                                  <img
                                      src={category.imageUrl}
                                      alt={category.name}
-                                     className="w-full h-38 object-cover rounded-t-md"
+                                     className="w-full h-40 object-cover rounded-t-md"
                                  />
                                  <div className="absolute bottom-0 left-0 w-full bg-white bg-opacity-75 p-2 text-center">
                                      <h3 className="text-lg font-semibold text-gray-800">{category.name}</h3>
@@ -187,7 +187,7 @@ export default function Home() {
                                    <img
                                        src={product.imageUrl}
                                        alt={product.name}
-                                       className="mb-4 rounded-md h-40"
+                                       className="mb-4 rounded-md h-40 object-cover"
                                    />
                                    <p className="text-lg font-semibold">${product.price.toFixed(2)}</p>
                                    <Button className="mt-4" onClick={() => viewProduct(product.id)}>View Details</Button>

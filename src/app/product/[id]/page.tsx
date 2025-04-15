@@ -21,6 +21,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { Textarea } from "@/components/ui/textarea";
 import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import { useAuth } from "@/context/AuthContext";
 
 interface Props {
   params: { id: string };
@@ -35,6 +36,7 @@ const reviewFormSchema = z.object({
 interface Review {
     id: string;
     comment: string;
+    userName: string;
 }
 
 const ProductDetails = ({ params }: Props) => {
@@ -46,6 +48,7 @@ const ProductDetails = ({ params }: Props) => {
   const { wishlistItems, addToWishlist, removeFromWishlist } = useContext(WishlistContext);
   const [isInWishlist, setIsInWishlist] = useState(false);
     const [reviews, setReviews] = useState<Review[]>([]);
+    const { authUser } = useAuth();
 
     const form = useForm<z.infer<typeof reviewFormSchema>>({
         resolver: zodResolver(reviewFormSchema),
@@ -72,8 +75,8 @@ const ProductDetails = ({ params }: Props) => {
     fetchProduct();
       // Fetch initial reviews (replace with actual API call if available)
       const initialReviews = [
-          { id: '1', comment: 'This is a great product!' },
-          { id: '2', comment: 'I really enjoyed using this.' },
+          { id: '1', comment: 'This is a great product!', userName: 'John Doe' },
+          { id: '2', comment: 'I really enjoyed using this.', userName: 'Jane Smith' },
       ];
       setReviews(initialReviews);
   }, [id]);
@@ -124,6 +127,7 @@ const ProductDetails = ({ params }: Props) => {
             const newReview = {
                 id: String(Date.now()), // temporary ID
                 comment: values.comment,
+                userName: authUser?.displayName || 'Anonymous',
             };
             setReviews(prev => [...prev, newReview]);
 
@@ -167,6 +171,9 @@ const ProductDetails = ({ params }: Props) => {
             {reviews.length > 0 ? (
                 reviews.map((review) => (
                     <Card key={review.id} className="mb-4">
+                        <CardHeader>
+                            <CardTitle>{review.userName}</CardTitle>
+                        </CardHeader>
                         <CardContent>
                             <p>{review.comment}</p>
                         </CardContent>

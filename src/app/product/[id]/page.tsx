@@ -25,6 +25,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Star } from 'lucide-react';
 import {cn} from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface Props {
     params: { id: string };
@@ -65,6 +66,11 @@ const ProductDetails = ({ params }: Props) => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
+    const [isCouponApplied, setIsCouponApplied] = useState(false);
+    const [discountedPrice, setDiscountedPrice] = useState<number | null>(null);
+
+    const couponCode = "WINTER20";
+    const discountPercentage = 0.20;
 
 
     useEffect(() => {
@@ -178,7 +184,6 @@ const ProductDetails = ({ params }: Props) => {
         }
     };
 
-
     const StarDisplay = ({ rating }: { rating: number }) => {
         return (
             <div className="flex items-center">
@@ -194,6 +199,15 @@ const ProductDetails = ({ params }: Props) => {
                 <span className="ml-2 text-gray-500">{rating}/5</span>
             </div>
         );
+    };
+
+    const toggleCoupon = () => {
+        if (!isCouponApplied) {
+            setDiscountedPrice(product.price * (1 - discountPercentage));
+        } else {
+            setDiscountedPrice(null);
+        }
+        setIsCouponApplied(!isCouponApplied);
     };
 
 
@@ -220,9 +234,22 @@ const ProductDetails = ({ params }: Props) => {
                     </div>
                 </div>
                 <div>
-                    <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
-                    <p className="text-gray-700 mb-4">{product.description}</p>
-                    <p className="text-lg font-semibold">${product.price.toFixed(2)}</p>
+                     <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
+                     <p className="text-gray-700 mb-4">{product.description}</p>
+                     <div className="flex items-center mb-4">
+                         <p className="text-lg font-semibold mr-2">
+                             Price: ${discountedPrice !== null ? discountedPrice.toFixed(2) : product.price.toFixed(2)}
+                         </p>
+                         {discountedPrice !== null && (
+                             <p className="text-gray-500 line-through">${product.price.toFixed(2)}</p>
+                         )}
+                     </div>
+                     <div className="flex items-center space-x-2 mb-4">
+                         <Checkbox id="coupon" onCheckedChange={toggleCoupon} />
+                         <label htmlFor="coupon" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                             Apply Coupon: {couponCode}
+                         </label>
+                     </div>
                     <div className="flex space-x-4">
                         <Button onClick={handleAddToCart}>Add to Cart</Button>
                         <Button variant="outline" onClick={handleWishlistClick}>

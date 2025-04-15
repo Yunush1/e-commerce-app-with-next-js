@@ -24,6 +24,68 @@ import {useToast} from "@/hooks/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
+const categories = [
+    {
+        id: 1,
+        name: 'Lipsticks',
+        imageUrl: 'https://m.media-amazon.com/images/I/71w3oGhZMYL._AC_UF400,400_QL80_.jpg',
+        subcategories: ['Matte', 'Glossy', 'Long-lasting']
+    },
+    {
+        id: 2,
+        name: 'Face Masks',
+        imageUrl: 'https://m.media-amazon.com/images/I/71z3kpMAYsL._AC_SY450_.jpg',
+        subcategories: ['Hydrating', 'Clay', 'Sheet Masks']
+    },
+    {
+        id: 3,
+        name: 'Eyeliners',
+        imageUrl: 'https://m.media-amazon.com/images/I/71pWzhdypcL._AC_UL640_QL65_ML3_.jpg',
+        subcategories: ['Liquid', 'Pencil', 'Gel']
+    },
+    {
+        id: 4,
+        name: 'Nail Polishes',
+        imageUrl: 'https://m.media-amazon.com/images/I/61sbMiUnoGL._AC_UL480_QL65_ML3_.jpg',
+        subcategories: ['Shimmer', 'Matte', 'Gel']
+    },
+    {
+        id: 5,
+        name: 'Blushes',
+        imageUrl: 'https://m.media-amazon.com/images/I/71YAIFU48IL._AC_UL640_QL65_ML3_.jpg',
+        subcategories: ['Powder', 'Cream', 'Liquid']
+    },
+    {
+        id: 6,
+        name: 'Foundations',
+        imageUrl: 'https://m.media-amazon.com/images/I/51eg5OLwL5L._AC_UL640_QL65_ML3_.jpg',
+        subcategories: ['Liquid', 'Cream', 'Powder']
+    },
+    {
+        id: 7,
+        name: 'Concealers',
+        imageUrl: 'https://m.media-amazon.com/images/I/61pHnJ96oPL._AC_UL640_QL65_ML3_.jpg',
+        subcategories: ['Liquid', 'Cream', 'Stick']
+    },
+    {
+        id: 8,
+        name: 'Bronzers',
+        imageUrl: 'https://m.media-amazon.com/images/I/81QpkIctqPL._AC_SX679_.jpg',
+        subcategories: ['Powder', 'Cream', 'Stick']
+    },
+    {
+        id: 9,
+        name: 'Highlighters',
+        imageUrl: 'https://m.media-amazon.com/images/I/71HblAHs5xL._AC_UY879_-2.jpg',
+        subcategories: ['Powder', 'Cream', 'Liquid']
+    },
+    {
+        id: 10,
+        name: 'Setting Sprays',
+        imageUrl: 'https://m.media-amazon.com/images/I/71z3kpMAYsL._AC_UY226_.jpg',
+        subcategories: ['Matte', 'Dewy', 'Long-lasting']
+    },
+];
 
 const Header = () => {
   const router = useRouter();
@@ -125,36 +187,11 @@ const Header = () => {
                                       All Categories
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
-                                  <DropdownMenuItem onClick={() => router.push('/category/Lipsticks')}>
-                                      Lipsticks
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => router.push('/category/Face Masks')}>
-                                      Face Masks
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => router.push('/category/Eyeliners')}>
-                                      Eyeliners
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => router.push('/category/Nail Polishes')}>
-                                      Nail Polishes
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => router.push('/category/Blushes')}>
-                                      Blushes
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => router.push('/category/Foundations')}>
-                                      Foundations
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => router.push('/category/Concealers')}>
-                                      Concealers
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => router.push('/category/Bronzers')}>
-                                      Bronzers
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => router.push('/category/Highlighters')}>
-                                      Highlighters
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem onClick={() => router.push('/category/Setting Sprays')}>
-                                      Setting Sprays
-                                  </DropdownMenuItem>
+                                  {categories.map(category => (
+                                      <DropdownMenuItem key={category.id} onClick={() => router.push(`/category/${category.name}`)}>
+                                          {category.name}
+                                      </DropdownMenuItem>
+                                  ))}
                               </DropdownMenuContent>
                           </DropdownMenu>
                           <Button variant="ghost" onClick={() => router.push('/buy-now')} className="w-full justify-start">
@@ -179,36 +216,11 @@ const Header = () => {
                               All Categories
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => router.push('/category/Lipsticks')}>
-                              Lipsticks
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/category/Face Masks')}>
-                              Face Masks
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/category/Eyeliners')}>
-                              Eyeliners
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/category/Nail Polishes')}>
-                              Nail Polishes
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/category/Blushes')}>
-                              Blushes
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/category/Foundations')}>
-                              Foundations
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/category/Concealers')}>
-                              Concealers
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/category/Bronzers')}>
-                              Bronzers
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/category/Highlighters')}>
-                              Highlighters
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => router.push('/category/Setting Sprays')}>
-                              Setting Sprays
-                          </DropdownMenuItem>
+                          {categories.map(category => (
+                              <DropdownMenuItem key={category.id} onClick={() => router.push(`/category/${category.name}`)}>
+                                  {category.name}
+                              </DropdownMenuItem>
+                          ))}
                       </DropdownMenuContent>
                   </DropdownMenu>
                   <Button variant="ghost" onClick={() => router.push('/buy-now')}>

@@ -17,7 +17,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/context/AuthContext";
 import Link from 'next/link';
-import { Icons } from "@/components/icons";
+
 
 const formSchema = z.object({
     email: z.string().email({
@@ -114,7 +114,7 @@ const SignUpPage = () => {
                  <Button variant="outline" disabled={isSubmitting} onClick={handleGoogleSignIn}>
                         {isSubmitting ? "Signing Up..." : (
                             <>
-                                <Icons.google className="mr-2 h-4 w-4" />
+                                
                                 Sign Up with Google
                             </>
                         )}

@@ -115,7 +115,6 @@ const SignInPage = () => {
                  <Button variant="outline" disabled={isSubmitting} onClick={handleGoogleSignIn}>
                         {isSubmitting ? "Signing In..." : (
                             <>
-                                <Icons.google className="mr-2 h-4 w-4" />
                                 Sign In with Google
                             </>
                         )}

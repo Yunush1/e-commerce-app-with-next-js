@@ -270,7 +270,6 @@ const Header = () => {
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                    <DropdownMenuItem onClick={handleGoogleSignIn}>
-                         <Icons.google className="mr-2 h-4 w-4" />
                          <span>Sign In with Google</span>
                      </DropdownMenuItem>
                   <DropdownMenuSeparator />

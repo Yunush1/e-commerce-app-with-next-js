@@ -1,10 +1,10 @@
 'use client';
- 
- import React, { useState, useEffect } from 'react';
- import { useRouter } from 'next/navigation';
- import { Button } from '@/components/ui/button';
+
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
- import {
+import {
     Form,
     FormControl,
     FormField,
@@ -12,26 +12,37 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
- import { Input } from "@/components/ui/input";
- import { zodResolver } from "@hookform/resolvers/zod";
- import * as z from "zod";
- import { useForm } from "react-hook-form";
- import { Textarea } from "@/components/ui/textarea";
- import {
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useForm } from "react-hook-form";
+import { Textarea } from "@/components/ui/textarea";
+import {
     Card,
     CardContent,
     CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
- import { Product } from '@/types/product';
- import { useSearchParams } from 'next/navigation';
- import { useAuth } from "@/context/AuthContext";
- import { Checkbox } from "@/components/ui/checkbox";
- import Link from 'next/link';
+import { Product } from '@/types/product';
+import { useSearchParams } from 'next/navigation';
+import { useAuth } from "@/context/AuthContext";
+import { Checkbox } from "@/components/ui/checkbox";
+import Link from 'next/link';
 import { FormDescription } from "@/components/ui/form";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
- const formSchema = z.object({
+const formSchema = z.object({
     address: z.string().min(10, {
         message: "Address must be at least 10 characters.",
     }),
@@ -47,9 +58,9 @@ import { FormDescription } from "@/components/ui/form";
     terms: z.boolean().refine((value) => value === true, {
         message: 'You must accept the terms and conditions.',
     }),
- });
+});
 
- const BuyNowPage = () => {
+const BuyNowPage = () => {
     const router = useRouter();
     const [isSubmitting, setIsSubmitting] = useState(false);
     const searchParams = useSearchParams();
@@ -95,8 +106,8 @@ import { FormDescription } from "@/components/ui/form";
             // Simulate a submission process
             await new Promise((resolve) => setTimeout(resolve, 1000));
             console.log("Submitting order with values:", values);
-            alert("Order submitted successfully! Thank you for your purchase.");
-            router.push('/profile'); // Redirect to profile page after submission
+            //alert("Order submitted successfully! Thank you for your purchase.");
+            //router.push('/profile'); // Redirect to profile page after submission
         } catch (error: any) {
             console.error("Firebase buy now error:", error);
             setFirebaseError("An error occurred during the purchase. Please try again.");
@@ -205,6 +216,12 @@ import { FormDescription } from "@/components/ui/form";
                                         </FormControl>
                                         <FormLabel htmlFor="paypal" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">PayPal</FormLabel>
                                     </FormItem>
+                                    <FormItem className="flex items-center space-x-3 space-y-0">
+                                        <FormControl>
+                                            <RadioGroupItem value="stripe" id="stripe" className="peer h-4 w-4 border border-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" />
+                                        </FormControl>
+                                        <FormLabel htmlFor="stripe" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Stripe</FormLabel>
+                                    </FormItem>
                                 </RadioGroup>
                                 <FormMessage />
                             </FormItem>
@@ -233,13 +250,35 @@ import { FormDescription } from "@/components/ui/form";
                             </FormItem>
                         )}
                     />
-                    <Button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "Submitting..." : "Submit Order"}
-                    </Button>
+                    <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                            <Button type="submit" disabled={isSubmitting}>
+                                {isSubmitting ? "Submitting..." : "Submit Order"}
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Payment Confirmation</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Are you sure you want to proceed with the payment of ${calculateTotalPrice()} using {form.getValues("paymentMethod")}?
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction onClick={async () => {
+                                    await onSubmit(form.getValues());
+                                    if (!firebaseError) {
+                                        alert("Order submitted successfully! Thank you for your purchase.");
+                                        router.push('/profile');
+                                    }
+                                }}>Continue</AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </form>
             </Form>
         </div>
     );
  };
 
- export default BuyNowPage;
+export default BuyNowPage;

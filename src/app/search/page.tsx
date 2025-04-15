@@ -168,7 +168,7 @@ const Search = () => {
                         </Card>
                     ))
                 ) : (
-                    !loading && !error && searchQuery && <p>No products found matching your search.</p>}
+                    !loading && !error && searchQuery && <p>No products found matching your search.</p>)}
             </div>
         </div>
     );

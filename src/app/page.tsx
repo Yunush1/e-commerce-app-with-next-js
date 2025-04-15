@@ -129,7 +129,7 @@ export default function Home() {
 
 
      return (
-         <div className="container mx-auto px-8">
+         <div className="container mx-auto ">
              <section className="mb-8">
                 <CustomCarousel autoSlide autoSlideInterval={5000}>
                     <div className="h-64 flex items-center justify-center bg-muted rounded-md">

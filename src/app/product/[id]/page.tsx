@@ -26,6 +26,7 @@ import { Star } from 'lucide-react';
 import {cn} from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
+import Link from 'next/link';
 
 interface Props {
     params: { id: string };
@@ -133,7 +134,7 @@ const ProductDetails = ({ params }: Props) => {
     }
 
     if (error) {
-        return <div>Error: {error.message}</div>;
+        return <div>Error: {error}</div>;
     }
 
     if (!product) {
@@ -324,7 +325,9 @@ const ProductDetails = ({ params }: Props) => {
                         </form>
                     </Form>
                 ) : (
-                    <p>Please sign in to add a review.</p>
+                    <div>
+                        <p>Please <Link href="/signin" className="text-blue-500">sign in</Link> or <Link href="/signup" className="text-blue-500">sign up</Link> to add a review.</p>
+                    </div>
                 )}
             </section>
 

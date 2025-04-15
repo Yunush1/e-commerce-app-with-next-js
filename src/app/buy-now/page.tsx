@@ -222,6 +222,12 @@ const BuyNowPage = () => {
                                         </FormControl>
                                         <FormLabel htmlFor="stripe" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Stripe</FormLabel>
                                     </FormItem>
+                                     <FormItem className="flex items-center space-x-3 space-y-0">
+                                        <FormControl>
+                                            <RadioGroupItem value="razorpay" id="razorpay" className="peer h-4 w-4 border border-primary ring-offset-background focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground" />
+                                        </FormControl>
+                                        <FormLabel htmlFor="razorpay" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Razorpay</FormLabel>
+                                    </FormItem>
                                 </RadioGroup>
                                 <FormMessage />
                             </FormItem>

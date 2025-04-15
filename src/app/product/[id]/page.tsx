@@ -53,7 +53,6 @@ interface Review {
 }
 
 const ProductDetails = ({ params }: Props) => {
-    const { id } = params;
     const [product, setProduct] = useState<Product | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -74,6 +73,15 @@ const ProductDetails = ({ params }: Props) => {
     const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
     const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
     const [open, setOpen] = React.useState(false)
+
+    const { id } = React.use(
+        new Promise((resolve) => {
+            resolve(params);
+        })
+            .then((p: any) => {
+                return {id: p.id};
+            })
+    );
 
 
     useEffect(() => {
@@ -118,7 +126,6 @@ const ProductDetails = ({ params }: Props) => {
           };
           fetchSimilarProducts();
       }, [product]);
-
     useEffect(() => {
         if (product) {
             setIsInWishlist(wishlistItems.some(item => item.id === product.id));

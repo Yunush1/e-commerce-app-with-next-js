@@ -25,6 +25,14 @@ import { useAuth } from "@/context/AuthContext";
 import { Star } from 'lucide-react';
 import {cn} from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 
 interface Props {
     params: { id: string };
@@ -65,6 +73,7 @@ const ProductDetails = ({ params }: Props) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
     const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
+    const [open, setOpen] = React.useState(false)
 
 
     useEffect(() => {
@@ -199,13 +208,31 @@ const ProductDetails = ({ params }: Props) => {
 
     return (
         <div className="container mx-auto py-8">
+             <Dialog open={open} onOpenChange={setOpen}>
+                 <DialogContent>
+                     <DialogHeader>
+                         <DialogTitle>{product.name}</DialogTitle>
+                         <DialogDescription>
+                             <img
+                                 src={selectedImage || product.imageUrl}
+                                 alt={product.name}
+                                 className="rounded-md shadow-md w-full h-96 object-cover"
+                             />
+                         </DialogDescription>
+                     </DialogHeader>
+                 </DialogContent>
+             </Dialog>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
-                    <img
-                        src={selectedImage || product.imageUrl}
-                        alt={product.name}
-                        className="rounded-md shadow-md w-full h-96 object-cover"
-                    />
+                    <DialogTrigger asChild>
+                        <Button variant="outline">
+                            <img
+                                src={selectedImage || product.imageUrl}
+                                alt={product.name}
+                                className="rounded-md shadow-md w-full h-96 object-cover"
+                            />
+                        </Button>
+                    </DialogTrigger>
                     {/* Image Gallery */}
                     <div className="flex mt-4 space-x-2 overflow-x-auto">
                         {[product.imageUrl, ...additionalImages].map((img, index) => (
@@ -304,26 +331,26 @@ const ProductDetails = ({ params }: Props) => {
             </div>
             <section className="my-8">
                  <h2 className="text-2xl font-bold mb-4">Similar Products</h2>
-                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                     {similarProducts.map((similarProduct) => (
-                         <Card key={similarProduct.id}>
-                             <CardHeader>
-                                 <CardTitle>{similarProduct.name}</CardTitle>
-                                 <CardDescription>{similarProduct.description}</CardDescription>
-                             </CardHeader>
-                             <CardContent className="flex flex-col items-center">
-                                 <img
-                                      src={similarProduct.imageUrl}
-                                      alt={similarProduct.name}
-                                      className="mb-4 rounded-md h-32 w-32 object-cover"
-                                  />
-                                  <p className="text-lg font-semibold">${similarProduct.price.toFixed(2)}</p>
-                                  <Button className="mt-4">View Details</Button>
-                             </CardContent>
-                         </Card>
-                     ))}
-                 </div>
-             </section>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {similarProducts.map((similarProduct) => (
+                          <Card key={similarProduct.id}>
+                              <CardHeader>
+                                  <CardTitle>{similarProduct.name}</CardTitle>
+                                  <CardDescription>{similarProduct.description}</CardDescription>
+                              </CardHeader>
+                              <CardContent className="flex flex-col items-center">
+                                  <img
+                                       src={similarProduct.imageUrl}
+                                       alt={similarProduct.name}
+                                       className="mb-4 rounded-md h-32 w-32 object-cover"
+                                   />
+                                   <p className="text-lg font-semibold">${similarProduct.price.toFixed(2)}</p>
+                                   <Button className="mt-4">View Details</Button>
+                              </CardContent>
+                          </Card>
+                      ))}
+                  </div>
+              </section>
         </div>
     );
 };

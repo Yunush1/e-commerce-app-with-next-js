@@ -6,6 +6,7 @@ import {Toaster} from '@/components/ui/toaster';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
 import {AuthProvider} from "@/context/AuthContext";
+import Footer from '@/components/Footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -36,6 +37,7 @@ export default function RootLayout({
           <Header />
            {children}
            <Toaster />
+           <Footer />
          </WishlistProvider>
          </CartProvider>
        </AuthProvider>

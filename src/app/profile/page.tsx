@@ -97,8 +97,8 @@ const ProfilePage = () => {
                 <CardContent className="space-y-4">
                     <div className="mb-6">
                         <h3 className="text-lg font-semibold mb-2">User Information</h3>
-                        <p><strong>Name:</strong> {user.name}</p>
-                        <p><strong>Email:</strong> {user.email}</p>
+                        <p><strong>Name:</strong> {authUser?.displayName}</p>
+                        <p><strong>Email:</strong> {authUser?.email}</p>
                         <p><strong>Address:</strong> {user.address}</p>
                     </div>
 

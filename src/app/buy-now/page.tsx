@@ -36,7 +36,7 @@ const formSchema = z.object({
   city: z.string().min(2, {
     message: "City must be at least 2 characters.",
   }),
-  postalCode: z.string().regex(/^[0-9]{5}(?:-[0-9]{4})?$/, {
+  postalCode: z.string().regex(/^[0-9]{6}(?:-[0-9]{4})?$/, {
     message: "Please enter a valid postal code.",
   }),
 });

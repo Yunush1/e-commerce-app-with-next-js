@@ -211,4 +211,3 @@ const ProductDetails = ({ params }: Props) => {
  export default ProductDetails;
  
 +
-

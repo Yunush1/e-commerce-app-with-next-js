@@ -64,6 +64,7 @@ const ProductDetails = ({ params }: Props) => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
+    const [selectedImage, setSelectedImage] = useState<string | undefined>(undefined);
 
 
     useEffect(() => {
@@ -72,6 +73,7 @@ const ProductDetails = ({ params }: Props) => {
                 setLoading(true);
                 const data = await getProductById(parseInt(id));
                 setProduct(data);
+                setSelectedImage(data?.imageUrl);
             } catch (err: any) {
                 setError(err);
             } finally {
@@ -90,23 +92,23 @@ const ProductDetails = ({ params }: Props) => {
 
     useEffect(() => {
          const fetchSimilarProducts = async () => {
-             if (product) {
-                 try {
-                     const response = await fetch(`/api/products?category=${product.category}&limit=4`);
-                     if (!response.ok) {
-                         throw new Error('Failed to fetch similar products');
-                     }
-                     const data = await response.json();
-                     // Filter out the current product
-                     const filteredProducts = data.filter((p: Product) => p.id !== product.id);
-                     setSimilarProducts(filteredProducts);
-                 } catch (err: any) {
-                     console.error("Error fetching similar products:", err);
-                 }
-             }
-         };
-         fetchSimilarProducts();
-     }, [product]);
+              if (product) {
+                  try {
+                      const response = await fetch(`/api/products?category=${product.category}&limit=4`);
+                      if (!response.ok) {
+                          throw new Error('Failed to fetch similar products');
+                      }
+                      const data = await response.json();
+                      // Filter out the current product
+                      const filteredProducts = data.filter((p: Product) => p.name !== product.name);
+                      setSimilarProducts(filteredProducts);
+                  } catch (err: any) {
+                      console.error("Error fetching similar products:", err);
+                  }
+              }
+          };
+          fetchSimilarProducts();
+      }, [product]);
 
     useEffect(() => {
         if (product) {
@@ -188,34 +190,53 @@ const ProductDetails = ({ params }: Props) => {
         );
     };
 
+    const additionalImages = [
+        "https://picsum.photos/id/237/200/300",
+        "https://picsum.photos/id/238/200/300",
+        "https://picsum.photos/id/239/200/300",
+    ];
+
 
     return (
         <div className="container mx-auto py-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <img
-                    src={product.imageUrl}
-                    alt={product.name}
-                    className="rounded-md shadow-md"
-                />
+                <div>
+                    <img
+                        src={selectedImage || product.imageUrl}
+                        alt={product.name}
+                        className="rounded-md shadow-md w-full h-96 object-cover"
+                    />
+                    {/* Image Gallery */}
+                    <div className="flex mt-4 space-x-2 overflow-x-auto">
+                        {[product.imageUrl, ...additionalImages].map((img, index) => (
+                            <img
+                                key={index}
+                                src={img}
+                                alt={`Product Image ${index + 1}`}
+                                className="w-24 h-24 object-cover rounded-md cursor-pointer"
+                                onClick={() => setSelectedImage(img)}
+                            />
+                        ))}
+                    </div>
+                </div>
                 <div>
                     <h1 className="text-2xl font-bold mb-2">{product.name}</h1>
                     <p className="text-gray-700 mb-4">{product.description}</p>
                     <p className="text-lg font-semibold">${product.price.toFixed(2)}</p>
-                    <div className="flex space-x-4">
+                    <div className="flex items-center space-x-4 mb-4">
                         <Button onClick={handleAddToCart}>Add to Cart</Button>
-                        <Button variant="outline" onClick={handleWishlistClick}>
-                            {isInWishlist ? <HeartOff className="mr-2 h-4 w-4" /> : <Heart className="mr-2 h-4 w-4" />}
+                        <Button>Buy Now</Button>
+                        <Button
+                            variant="outline"
+                            onClick={handleWishlistClick}
+                        >
+                            {isInWishlist ? <HeartOff /> : <Heart />}
                             {isInWishlist ? 'Remove from Wishlist' : 'Add to Wishlist'}
                         </Button>
                     </div>
-                </div>
-            </div>
 
-            {/* Review Section */}
-            <section className="mt-8">
-                <h2 className="text-xl font-semibold mb-4">Reviews</h2>
-                {reviews.length > 0 ? (
-                    reviews.map((review) => (
+                    <h4 className="text-xl font-semibold mb-4">Customer Reviews</h4>
+                    {reviews.map(review => (
                         <Card key={review.id} className="mb-4">
                             <CardHeader>
                                 <CardTitle className="flex items-center justify-between">
@@ -227,83 +248,82 @@ const ProductDetails = ({ params }: Props) => {
                                 <p>{review.comment}</p>
                             </CardContent>
                         </Card>
-                    ))
-                ) : (
-                    <p>No reviews yet.</p>
-                )}
+                    ))}
 
-                {/* Review Submission Form */}
-                {authUser ? (
-                    <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                            <FormField
-                                control={form.control}
-                                name="comment"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Add a Review</FormLabel>
-                                        <FormControl>
-                                            <Textarea
-                                                placeholder="Write your review here"
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="rating"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Rating</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                type="number"
-                                                defaultValue={5}
-                                                {...field}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <Button type="submit" disabled={isSubmitting}>
-                                {isSubmitting ? "Submitting..." : "Submit Review"}
-                            </Button>
-                        </form>
-                    </Form>
-                ) : (
-                    <p>Please sign in to add a review.</p>
-                )}
-            </section>
+                    {authUser ? (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Write a Review</CardTitle>
+                                <CardDescription>Share your thoughts about this product</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <Form {...form}>
+                                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                                        <FormField
+                                            control={form.control}
+                                            name="comment"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Your Review</FormLabel>
+                                                    <FormControl>
+                                                        <Textarea placeholder="Write your review here" {...field} />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="rating"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Rating</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            type="number"
+                                                            defaultValue={5}
+                                                            {...field}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
 
-            {/* Similar Products Section */}
-             {similarProducts.length > 0 && (
-                 <section className="mt-8">
-                     <h2 className="text-xl font-semibold mb-4">Similar Products</h2>
-                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                         {similarProducts.map((similarProduct) => (
-                             <Card key={similarProduct.id} className="cursor-pointer" onClick={() => router.push(`/product/${similarProduct.id}`)}>
-                                 <CardHeader>
-                                     <CardTitle>{similarProduct.name}</CardTitle>
-                                     <CardDescription>{similarProduct.description}</CardDescription>
-                                 </CardHeader>
-                                 <CardContent className="flex flex-col items-center">
-                                     <img
-                                         src={similarProduct.imageUrl}
-                                         alt={similarProduct.name}
-                                         className="mb-4 rounded-md h-32 w-32 object-cover"
-                                     />
-                                     <p className="text-lg font-semibold">${similarProduct.price.toFixed(2)}</p>
-                                     <Button className="mt-4">View Details</Button>
-                                 </CardContent>
-                             </Card>
-                         ))}
-                     </div>
-                 </section>
-             )}
+                                        <Button type="submit" disabled={isSubmitting}>
+                                            {isSubmitting ? "Submitting..." : "Submit Review"}
+                                        </Button>
+                                    </form>
+                                </Form>
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <p>Please sign in to leave a review.</p>
+                    )}
+                </div>
+            </div>
+            <section className="my-8">
+                 <h2 className="text-2xl font-bold mb-4">Similar Products</h2>
+                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                     {similarProducts.map((similarProduct) => (
+                         <Card key={similarProduct.id}>
+                             <CardHeader>
+                                 <CardTitle>{similarProduct.name}</CardTitle>
+                                 <CardDescription>{similarProduct.description}</CardDescription>
+                             </CardHeader>
+                             <CardContent className="flex flex-col items-center">
+                                 <img
+                                      src={similarProduct.imageUrl}
+                                      alt={similarProduct.name}
+                                      className="mb-4 rounded-md h-32 w-32 object-cover"
+                                  />
+                                  <p className="text-lg font-semibold">${similarProduct.price.toFixed(2)}</p>
+                                  <Button className="mt-4">View Details</Button>
+                             </CardContent>
+                         </Card>
+                     ))}
+                 </div>
+             </section>
         </div>
     );
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useState, useEffect} from "react";
-import {firebaseApp} from "@/lib/firebase";
+import {auth} from "@/lib/firebase";
 import {getAnalytics} from "firebase/analytics";
 import Footer from "@/components/Footer";
 
@@ -11,7 +11,7 @@ const ClientFooter = () => {
     useEffect(() => {
         // Initialize Firebase Analytics only on the client-side
         if (typeof window !== 'undefined') {
-            getAnalytics(firebaseApp);
+            getAnalytics(auth.app);
         }
 
         // Simulate loading
@@ -24,3 +24,4 @@ const ClientFooter = () => {
 };
 
 export default ClientFooter;
+

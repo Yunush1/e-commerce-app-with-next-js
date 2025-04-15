@@ -24,6 +24,7 @@ import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/compo
 import { useAuth } from "@/context/AuthContext";
 import { Star } from 'lucide-react';
 import {cn} from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 interface Props {
     params: { id: string };
@@ -53,7 +54,7 @@ const ProductDetails = ({ params }: Props) => {
     const [isInWishlist, setIsInWishlist] = useState(false);
     const [reviews, setReviews] = useState<Review[]>([]);
     const { authUser } = useAuth();
-
+    const router = useRouter();
     const form = useForm<z.infer<typeof reviewFormSchema>>({
         resolver: zodResolver(reviewFormSchema),
         defaultValues: {
@@ -62,6 +63,7 @@ const ProductDetails = ({ params }: Props) => {
         },
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
 
 
     useEffect(() => {
@@ -85,6 +87,26 @@ const ProductDetails = ({ params }: Props) => {
         ];
         setReviews(initialReviews);
     }, [id]);
+
+    useEffect(() => {
+         const fetchSimilarProducts = async () => {
+             if (product) {
+                 try {
+                     const response = await fetch(`/api/products?category=${product.category}&limit=4`);
+                     if (!response.ok) {
+                         throw new Error('Failed to fetch similar products');
+                     }
+                     const data = await response.json();
+                     // Filter out the current product
+                     const filteredProducts = data.filter((p: Product) => p.id !== product.id);
+                     setSimilarProducts(filteredProducts);
+                 } catch (err: any) {
+                     console.error("Error fetching similar products:", err);
+                 }
+             }
+         };
+         fetchSimilarProducts();
+     }, [product]);
 
     useEffect(() => {
         if (product) {
@@ -256,6 +278,32 @@ const ProductDetails = ({ params }: Props) => {
                     <p>Please sign in to add a review.</p>
                 )}
             </section>
+
+            {/* Similar Products Section */}
+             {similarProducts.length > 0 && (
+                 <section className="mt-8">
+                     <h2 className="text-xl font-semibold mb-4">Similar Products</h2>
+                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                         {similarProducts.map((similarProduct) => (
+                             <Card key={similarProduct.id} className="cursor-pointer" onClick={() => router.push(`/product/${similarProduct.id}`)}>
+                                 <CardHeader>
+                                     <CardTitle>{similarProduct.name}</CardTitle>
+                                     <CardDescription>{similarProduct.description}</CardDescription>
+                                 </CardHeader>
+                                 <CardContent className="flex flex-col items-center">
+                                     <img
+                                         src={similarProduct.imageUrl}
+                                         alt={similarProduct.name}
+                                         className="mb-4 rounded-md h-32 w-32 object-cover"
+                                     />
+                                     <p className="text-lg font-semibold">${similarProduct.price.toFixed(2)}</p>
+                                     <Button className="mt-4">View Details</Button>
+                                 </CardContent>
+                             </Card>
+                         ))}
+                     </div>
+                 </section>
+             )}
         </div>
     );
 };
